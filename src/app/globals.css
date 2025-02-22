@@ -24,3 +24,21 @@
 
   --radius-xl: 0.625rem;
 }
+
+.button {
+  background-color: none;
+  padding: 10px 32px;
+  border: solid 1.5px var(--color-gray-300);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.button:hover {
+  color: var(--color-gray-900);
+  background-color: var(--color-gray-100);
+}
+
+.height-home {
+  height: calc(100dvh - 80px);
+}

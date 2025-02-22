@@ -1,3 +1,4 @@
+import { Header } from '@/components/header'
 import './globals.css'
 
 import type { Metadata } from 'next'
@@ -26,7 +27,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${oxanium.variable} ${montserrat.variable}`}>
-      <body>{children}</body>
+      <body className="bg-gray-900 text-gray-100 font-bold antialiased bg-[url(/background.png)] bg-no-repeat bg-top md:bg-right-top">
+        <Header />
+        {children}
+      </body>
     </html>
   )
 }
