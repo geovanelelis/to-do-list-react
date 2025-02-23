@@ -2,19 +2,65 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
 
 import Head from 'next/head'
 import { Textarea } from '../../components/textarea'
 import { FaTrashAlt, FaBoxOpen, FaCheck } from 'react-icons/fa'
 
-export default function Dashboard() {
-  
+import { db } from '@/services/firebaseConnection'
+import { addDoc, collection, query, orderBy, where, onSnapshot } from 'firebase/firestore'
+
+interface HomeProps {
+  user: {
+    email: string
+  }
+}
+
+interface TaskProps {
+  id: string
+  user: string
+  tarefa: string
+  end_date: string
+  completed: boolean
+  archived: boolean
+}
+
+export default function Dashboard({ user }: HomeProps) {
   const { data: session, status } = useSession()
+
   const [input, setInput] = useState('')
   const [endDate, setEndDate] = useState('')
   const [completed, setCompleted] = useState(false)
   const [archived, setArchived] = useState(false)
+  const [tasks, setTasks] = useState<TaskProps[]>([])
+
+  useEffect(() => {
+    if (!session?.user?.email) return
+
+    const tarefasRef = collection(db, 'tarefas')
+    const q = query(
+      tarefasRef,
+      orderBy('end_date', 'desc'),
+      where('user', '==', session.user.email)
+    )
+
+    return onSnapshot(q, (snapshot) => {
+      let lista = [] as TaskProps[]
+
+      snapshot.forEach((doc) => {
+        lista.push({
+          id: doc.id,
+          user: doc.data().user,
+          tarefa: doc.data().tarefa,
+          end_date: doc.data().end_date,
+          completed: doc.data().completed,
+          archived: doc.data().archived,
+        })
+      })
+      setTasks(lista)
+    })
+  }, [session?.user?.email])
 
   if (status === 'loading') {
     return <p>Carregando...</p>
@@ -22,6 +68,28 @@ export default function Dashboard() {
 
   if (!session) {
     redirect('/')
+  }
+  async function handleRegisterTask(event: FormEvent) {
+    event.preventDefault()
+
+    if (input === '') return
+
+    alert('Teste')
+
+    try {
+      await addDoc(collection(db, 'tarefas'), {
+        user: session?.user?.email,
+        tarefa: input,
+        end_date: endDate,
+        completed: false,
+        archived: false,
+      })
+
+      setInput('')
+      setEndDate('')
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
@@ -37,7 +105,7 @@ export default function Dashboard() {
               Criar Nova Tarefa
             </h1>
 
-            <form className="w-full flex flex-col gap-4">
+            <form className="w-full flex flex-col gap-4" onSubmit={handleRegisterTask}>
               <div>
                 <label className="text-gray-100 font-medium">Descrição</label>
                 <Textarea
@@ -74,24 +142,29 @@ export default function Dashboard() {
           <h1 className="text-center font-heading text-3xl font-bold text-gray-100 mb-6">
             Minhas tarefas
           </h1>
-          <article className="mb-3.5 flex border border-gray-300 rounded-xl p-3.5 flex-col items-start">
-            <div className="flex items-center justify-between w-full">
-              <p className="whitespace-pre-wrap">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis dolore inventore
-                nostrum eaque maiores eum, dolor ullam repellat unde quisquam exercitationem labore
-                porro, et eveniet illo veritatis, amet laborum. Facilis..
-              </p>
-              <button>
-                <FaCheck className="size-5 text-gray-100 hover:text-green transition-all duration-300 cursor-pointer mx-2" />
-              </button>
-              <button>
-                <FaBoxOpen className="size-5 text-gray-100 hover:text-yellow transition-all duration-300 cursor-pointer mx-2" />
-              </button>
-              <button>
-                <FaTrashAlt className="size-5 text-gray-100 hover:text-red transition-all duration-300 cursor-pointer mx-2" />
-              </button>
-            </div>
-          </article>
+
+          {tasks.map((item) => (
+            <article
+              key={item.id}
+              className="mb-3.5 flex text-gray-900 rounded-xl p-3.5 flex-col items-start bg-gray-100"
+            >
+              <div className="flex items-center w-full justify-between">
+                <p className="whitespace-pre-wrap">{item.tarefa}</p>
+
+                <div className="flex items-center gap-4 ml-auto  transition-all duration-300 cursor-pointer">
+                  <button>
+                    <FaCheck className="size-5 hover:text-green transition-all duration-300 cursor-pointer" />
+                  </button>
+                  <button>
+                    <FaBoxOpen className="size-5 hover:text-yellow transition-all duration-300 cursor-pointer" />
+                  </button>
+                  <button>
+                    <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer" />
+                  </button>
+                </div>
+              </div>
+            </article>
+          ))}
         </section>
       </main>
     </div>
