@@ -65,7 +65,7 @@ export default function ArchivedTasks() {
 <<<<<<< HEAD
         archived: false,
 =======
-        archived: false, // Desarquivando a tarefa
+        archived: false,
 >>>>>>> 7722c62d1b256571ef29fc1566eb927003b611cc
       })
       console.log(`Tarefa ${taskId} foi desarquivada`)
