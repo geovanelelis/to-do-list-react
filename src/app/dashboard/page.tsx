@@ -47,6 +47,10 @@ export default function AllTasks() {
         })
       })
 
+<<<<<<< HEAD
+=======
+      // Aplica o filtro de busca
+>>>>>>> 7722c62d1b256571ef29fc1566eb927003b611cc
       const filteredTasks = lista.filter((task) => task.tarefa.toLowerCase().includes(searchQuery))
 
       setTasks(filteredTasks)
