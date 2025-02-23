@@ -25,8 +25,7 @@ export default function Home() {
 
             <div>
               <section className="flex flex-row gap-16">
-                <span className="button">criar nova</span>
-                <span className="button">arquivadas</span>
+                <span className="button">Tarefas Arquivadas</span>
               </section>
             </div>
           </div>
