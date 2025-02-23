@@ -62,7 +62,7 @@ export default function ArchivedTasks() {
   async function handleUndoArchive(taskId: string) {
     try {
       await updateDoc(doc(db, 'tarefas', taskId), {
-        archived: false, // Desarquivando a tarefa
+        archived: false,
       })
       console.log(`Tarefa ${taskId} foi desarquivada`)
     } catch (error) {

@@ -47,7 +47,6 @@ export default function AllTasks() {
         })
       })
 
-      // Aplica o filtro de busca
       const filteredTasks = lista.filter((task) => task.tarefa.toLowerCase().includes(searchQuery))
 
       setTasks(filteredTasks)
