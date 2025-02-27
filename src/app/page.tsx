@@ -1,13 +1,18 @@
 'use client'
 
+import Loading from '@/components/loading'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Suspense } from 'react'
 
 export default function Home() {
   const { data: session, status } = useSession()
 
+  if (status === 'loading') {
+    return <Loading />
+  }
   return (
     <div>
       <Head>

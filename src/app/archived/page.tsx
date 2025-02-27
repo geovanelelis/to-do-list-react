@@ -2,13 +2,15 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 
 import Head from 'next/head'
 import { FaUndo, FaTrashAlt } from 'react-icons/fa'
 
 import { db } from '@/services/firebaseConnection'
 import { collection, query, where, onSnapshot, updateDoc, doc, deleteDoc } from 'firebase/firestore'
+
+import Loading from '@/components/loading'
 
 interface TaskProps {
   id: string
@@ -20,6 +22,7 @@ interface TaskProps {
 }
 
 export default function ArchivedTasks() {
+  
   const { data: session, status } = useSession()
 
   const [tasks, setTasks] = useState<TaskProps[]>([])
@@ -52,7 +55,7 @@ export default function ArchivedTasks() {
   }, [session?.user?.email])
 
   if (status === 'loading') {
-    return <p>Carregando...</p>
+    return <Loading />
   }
 
   if (!session) {

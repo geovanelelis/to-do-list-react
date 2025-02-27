@@ -10,6 +10,8 @@ import { FaPen, FaTrashAlt } from 'react-icons/fa'
 import { db } from '@/services/firebaseConnection'
 import { collection, query, where, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
 
+import Loading from '@/components/loading'
+
 interface TaskProps {
   id: string
   user: string
@@ -21,7 +23,7 @@ interface TaskProps {
 
 export default function Dashboard() {
   return (
-    <Suspense fallback={<p>Carregando...</p>}>
+    <Suspense fallback={<Loading />}>
       <DashboardContent />
     </Suspense>
   )
@@ -54,7 +56,7 @@ function DashboardContent() {
   }, [session?.user?.email, searchQuery])
 
   if (status === 'loading') {
-    return <p>Carregando...</p>
+    return <Loading />
   }
 
   if (!session) {
@@ -75,6 +77,10 @@ function DashboardContent() {
 
   function handleEditTask(taskId: string) {
     router.push(`/create?id=${taskId}`)
+  }
+
+  function handleCreateTask() {
+    router.push('/create')
   }
 
   return (
@@ -112,6 +118,15 @@ function DashboardContent() {
               </article>
             ))
           )}
+
+          <div className="flex justify-center">
+            <button
+              className="bg-blue-500 text-gray-100 font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 cursor-pointer"
+              onClick={handleCreateTask}
+            >
+              Criar nova tarefa
+            </button>
+          </div>
         </section>
       </main>
     </div>

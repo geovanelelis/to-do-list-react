@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
-import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
+import { ChangeEvent, FormEvent, useState, useEffect, Suspense } from 'react'
 
 import Head from 'next/head'
 import { Textarea } from '../../components/textarea'
@@ -21,6 +21,8 @@ import {
   doc,
 } from 'firebase/firestore'
 
+import Loading from '@/components/loading'
+
 interface TaskProps {
   id: string
   user: string
@@ -31,6 +33,7 @@ interface TaskProps {
 }
 
 export default function createTask() {
+
   const { data: session, status } = useSession()
 
   const [input, setInput] = useState('')
@@ -49,24 +52,16 @@ export default function createTask() {
     )
 
     return onSnapshot(q, (snapshot) => {
-      let lista = [] as TaskProps[]
-
-      snapshot.forEach((doc) => {
-        lista.push({
-          id: doc.id,
-          user: doc.data().user,
-          tarefa: doc.data().tarefa,
-          end_date: doc.data().end_date,
-          completed: doc.data().completed,
-          archived: doc.data().archived,
-        })
-      })
+      let lista = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as TaskProps[]
       setTasks(lista)
     })
   }, [session?.user?.email])
 
   if (status === 'loading') {
-    return <p>Carregando...</p>
+    return <Loading />
   }
 
   if (!session) {
@@ -187,7 +182,7 @@ export default function createTask() {
               <div className="flex gap-4">
                 <button
                   type="submit"
-                  className="font-bold px-7 py-2.5 rounded-xl bg-blue-700 text-gray-100 cursor-pointer hover:bg-blue-500 transition-all duration-300"
+                  className="font-bold px-7 py-2.5 w-full rounded-xl bg-blue-700 text-gray-100 cursor-pointer hover:bg-blue-500 transition-all duration-300"
                 >
                   Salvar
                 </button>
@@ -196,7 +191,7 @@ export default function createTask() {
                   <button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="font-bold px-7 py-2.5 rounded-xl bg-gray-300 text-gray-900 cursor-pointer hover:bg-gray-200 transition-all duration-300"
+                    className="font-bold px-7 py-2.5 w-full rounded-xl bg-gray-300 text-gray-900 cursor-pointer hover:bg-gray-200 transition-all duration-300"
                   >
                     Cancelar
                   </button>
@@ -231,16 +226,18 @@ export default function createTask() {
                     </p>
                   </div>
 
-                  <div className="flex flex-col items-end w-1/4">
-                    <p className="text-gray-500 text-xs font-medium">Data de Conclusão</p>
-                    <p
-                      className={`text-gray-900 ${
-                        item.completed ? 'line-through text-gray-500' : ''
-                      }`}
-                    >
-                      {new Date(item.end_date).toLocaleDateString()}
-                    </p>
-                  </div>
+                  {item.end_date && 'Invalid Date' && (
+                    <div className="flex flex-col items-end w-1/4">
+                      <p className="text-gray-500 text-xs font-medium">Data de Conclusão</p>
+                      <p
+                        className={`text-gray-900 ${
+                          item.completed ? 'line-through text-gray-500' : ''
+                        }`}
+                      >
+                        {new Date(item.end_date).toLocaleDateString()}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer">
