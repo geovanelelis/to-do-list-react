@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect, useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 
 import Head from 'next/head'
 import { FaPen, FaTrashAlt } from 'react-icons/fa'
@@ -20,6 +20,14 @@ interface TaskProps {
 }
 
 export default function Dashboard() {
+  return (
+    <Suspense fallback={<p>Carregando...</p>}>
+      <DashboardContent />
+    </Suspense>
+  )
+}
+
+function DashboardContent() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -34,18 +42,10 @@ export default function Dashboard() {
     const q = query(tarefasRef, where('user', '==', session.user.email))
 
     return onSnapshot(q, (snapshot) => {
-      let lista = [] as TaskProps[]
-
-      snapshot.forEach((doc) => {
-        lista.push({
-          id: doc.id,
-          user: doc.data().user,
-          tarefa: doc.data().tarefa,
-          end_date: doc.data().end_date,
-          completed: doc.data().completed,
-          archived: doc.data().archived,
-        })
-      })
+      let lista = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as TaskProps[]
 
       const filteredTasks = lista.filter((task) => task.tarefa.toLowerCase().includes(searchQuery))
 
