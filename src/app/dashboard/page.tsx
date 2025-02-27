@@ -19,7 +19,7 @@ interface TaskProps {
   archived: boolean
 }
 
-export default function AllTasks() {
+export default function Dashboard() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const searchParams = useSearchParams()

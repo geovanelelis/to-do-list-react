@@ -21,12 +21,6 @@ import {
   doc,
 } from 'firebase/firestore'
 
-interface HomeProps {
-  user: {
-    email: string
-  }
-}
-
 interface TaskProps {
   id: string
   user: string
@@ -36,7 +30,7 @@ interface TaskProps {
   archived: boolean
 }
 
-export default function Dashboard({ user }: HomeProps) {
+export default function createTask() {
   const { data: session, status } = useSession()
 
   const [input, setInput] = useState('')
