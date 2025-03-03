@@ -3,7 +3,6 @@
 @theme {
   --color-*: initial;
 
-  --color-blue-300: #04b2d9;
   --color-blue-500: #049dd9;
   --color-blue-700: #0477bf;
 
@@ -11,7 +10,7 @@
 
   --color-green: #2ebc7d;
 
-  --color-yellow: #ff9e00;
+  --color-yellow: #edca06;
 
   --color-gray-100: #dae4f2;
   --color-gray-200: #c8d0da;

@@ -13,7 +13,7 @@ export function Header() {
 
   function handleSearch() {
     if (search.trim() !== '') {
-      router.push(`/dashboard?search=${encodeURIComponent(search)}`)
+      router.push(`/?search=${encodeURIComponent(search)}`)
     }
   }
 
@@ -30,7 +30,7 @@ export function Header() {
 
           {session?.user && (
             <Link
-              href="/dashboard"
+              href="/"
               className="font-bold px-5 py-1.5 rounded-xl bg-gray-100 text-gray-900 cursor-pointer mx-5 hover:opacity-80 transition-all duration-300"
             >
               Minhas Tarefas
