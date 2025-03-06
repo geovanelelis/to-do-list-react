@@ -1,28 +1,30 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { redirect, useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect, Suspense } from 'react'
+import { redirect } from 'next/navigation'
+import { ChangeEvent, FormEvent, useState, useEffect } from 'react'
 
 import Head from 'next/head'
-import { FaPen, FaTrashAlt, FaCheck, FaUndo } from 'react-icons/fa'
+import { Textarea } from '@/components/textarea'
+import { FaTrashAlt, FaCheck, FaPen, FaUndo } from 'react-icons/fa'
 import { MdArchive, MdUnarchive } from 'react-icons/md'
 
 import { db } from '@/services/firebaseConnection'
 import {
+  addDoc,
   collection,
   query,
+  orderBy,
   where,
   onSnapshot,
+  updateDoc,
   deleteDoc,
   doc,
-  updateDoc,
   getDoc,
-  orderBy,
+  limit,
 } from 'firebase/firestore'
 
 import Loading from '@/components/loading'
-import { arch } from 'os'
 
 interface TaskProps {
   id: string
@@ -35,20 +37,12 @@ interface TaskProps {
 }
 
 export default function Dashboard() {
-  return (
-    <Suspense fallback={<Loading />}>
-      <DashboardContent />
-    </Suspense>
-  )
-}
-
-function DashboardContent() {
   const { data: session, status } = useSession()
-  const router = useRouter()
-  const searchParams = useSearchParams()
-  const searchQuery = searchParams.get('search')?.toLowerCase() || ''
 
+  const [input, setInput] = useState('')
+  const [endDate, setEndDate] = useState('')
   const [tasks, setTasks] = useState<TaskProps[]>([])
+  const [editTaskId, setEditTaskId] = useState<string | null>(null)
 
   useEffect(() => {
     if (!session?.user?.email) return
@@ -57,7 +51,8 @@ function DashboardContent() {
     const q = query(
       tarefasRef,
       orderBy('created_at', 'desc'),
-      where('user', '==', session.user.email)
+      where('user', '==', session.user.email),
+      limit(3)
     )
 
     return onSnapshot(q, (snapshot) => {
@@ -65,12 +60,9 @@ function DashboardContent() {
         id: doc.id,
         ...doc.data(),
       })) as TaskProps[]
-
-      const filteredTasks = lista.filter((task) => task.tarefa.toLowerCase().includes(searchQuery))
-
-      setTasks(filteredTasks)
+      setTasks(lista)
     })
-  }, [session?.user?.email, searchQuery])
+  }, [session?.user?.email])
 
   if (status === 'loading') {
     return <Loading />
@@ -79,13 +71,55 @@ function DashboardContent() {
   if (!session) {
     redirect('/')
   }
+  async function handleRegisterTask(event: FormEvent) {
+    event.preventDefault()
+
+    if (input === '') return alert('Digite uma tarefa!')
+
+    try {
+      if (editTaskId) {
+        const taskRef = doc(db, 'tarefas', editTaskId)
+        await updateDoc(taskRef, {
+          tarefa: input,
+          end_date: endDate,
+        })
+        setEditTaskId(null)
+      } else {
+        await addDoc(collection(db, 'tarefas'), {
+          user: session?.user?.email,
+          tarefa: input,
+          end_date: endDate,
+          completed: false,
+          archived: false,
+          created_at: new Date(),
+        })
+      }
+
+      setInput('')
+      setEndDate('')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  function handleEditTaskBtn(task: TaskProps) {
+    setEditTaskId(task.id)
+    setInput(task.tarefa)
+    setEndDate(task.end_date)
+  }
+
+  function handleCancelEdit() {
+    setInput('')
+    setEndDate('')
+    setEditTaskId(null)
+  }
+
   async function handleCompletedBtn(taskId: string, isCompleted: boolean) {
     console.log(`Clicou na tarefa ${taskId}. Status atual: ${isCompleted}`)
 
     try {
       await updateDoc(doc(db, 'tarefas', taskId), {
         completed: !isCompleted,
-        archived: false,
       })
     } catch (error) {
       console.error('Erro ao marcar tarefa como concluída:', error)
@@ -93,21 +127,21 @@ function DashboardContent() {
   }
 
   async function handleArchivedBtn(taskId: string) {
-    console.log('Tentando buscar a tarefa com ID: ', taskId)
+    console.log('Tentando buscar a tarefa com ID:', taskId)
     try {
       const taskRef = doc(db, 'tarefas', taskId)
       const taskSnap = await getDoc(taskRef)
 
       if (taskSnap.exists()) {
         const currentArchivedState = taskSnap.data().archived
-        console.log('Tarefa encontrada. Estado atual de archived:', !currentArchivedState)
+        console.log('Tarefa encontrada. Estado atual de archived:', currentArchivedState)
 
         await updateDoc(taskRef, {
           archived: !currentArchivedState,
         })
         alert(`Tarefa ${currentArchivedState ? 'desarquivada' : 'arquivada'} com sucesso!`)
       } else {
-        console.log('Tarefa não encontrada')
+        console.error('Tarefa não encontrada!')
       }
     } catch (error) {
       console.error('Erro ao arquivar tarefa:', error)
@@ -126,96 +160,133 @@ function DashboardContent() {
     }
   }
 
-  function handleEditTask(taskId: string) {
-    router.push(`/create?id=${taskId}`)
-  }
-
-  function handleCreateTask() {
-    router.push('/create')
-  }
-
   return (
     <div className="max-w-[1240px] mx-auto px-5 py-8 md:py-0">
       <Head>
-        <title>Todas as Tarefas</title>
+        <title>Meu painel de tarefas</title>
       </Head>
 
       <main>
+        <section>
+          <div className="font-medium mt-12 flex flex-col items-center justify-center max-md:mt-6">
+            <h1 className="font-heading text-4xl font-bold text-gray-100 mb-6 ">
+              Criar Nova Tarefa
+            </h1>
+
+            <form className="w-full flex flex-col gap-4" onSubmit={handleRegisterTask}>
+              <div>
+                <label className="text-gray-100 font-medium max-md:text-sm">Descrição</label>
+                <Textarea
+                  placeholder="Digite sua tarefa..."
+                  value={input}
+                  onChange={(event: ChangeEvent<HTMLTextAreaElement>) =>
+                    setInput(event.target.value)
+                  }
+                />
+
+                <label htmlFor="end_date" className="text-gray-100 font-medium max-md:text-sm">
+                  Data de Conclusão
+                </label>
+                <input
+                  type="date"
+                  id="end_date"
+                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-xl text-gray-300 outline-none focus:outline-none max-md:text-sm"
+                  value={endDate}
+                  onChange={(event) => setEndDate(event.target.value)}
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <button
+                  type="submit"
+                  className="font-bold px-7 py-2.5 w-full rounded-xl bg-blue-500 text-gray-100 cursor-pointer hover:bg-blue-700 transition-all duration-300 "
+                >
+                  Salvar
+                </button>
+
+                {editTaskId && (
+                  <button
+                    type="button"
+                    onClick={handleCancelEdit}
+                    className="font-bold px-7 py-2.5 w-full rounded-xl bg-gray-300 text-gray-900 cursor-pointer hover:bg-gray-200 transition-all duration-300"
+                  >
+                    Cancelar
+                  </button>
+                )}
+              </div>
+            </form>
+          </div>
+        </section>
+
         <section className="mt-12 flex flex-col">
-          <h1 className="text-center font-heading text-4xl font-bold text-gray-100 mb-8">
-            Tarefas Criadas
+          <h1 className="text-center font-heading text-3xl font-bold text-gray-100 mb-6">
+            Últimas Tarefas Criadas
           </h1>
 
-          {tasks.length === 0 ? (
-            <p className="text-center text-gray-400 mb-4">Nenhuma tarefa encontrada.</p>
-          ) : (
-            tasks.map((item) => (
-              <article
-                key={item.id}
-                className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start hover:scale-101 transition-all duration-300 ${
-                  item.completed ? 'bg-gray-600 text-gray-200' : 'bg-gray-100 text-gray-900'
-                }`}
-              >
-                <div className="flex items-center w-full justify-between">
-                  <div className="flex w-full gap-4">
-                    <div className="flex flex-col w-2/3">
-                      <p className="text-xs font-medium">Descrição</p>
-                      <p className={`whitespace-pre-wrap ${item.completed ? 'line-through' : ''}`}>
-                        {item.tarefa}
+          {tasks.map((item) => (
+            <article
+              key={item.id}
+              className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start hover:scale-101 transition-all duration-300  ${
+                item.completed
+                  ? 'bg-gray-600 text-gray-200 opacity-60'
+                  : 'bg-gray-100 text-gray-900'
+              }`}
+            >
+              <div className="flex items-center w-full justify-between">
+                <div className="flex w-full gap-4">
+                  <div className="flex flex-col w-2/3">
+                    <p className="text-xs font-medium max-md:text-[10px]">Descrição</p>
+                    <p
+                      className={`whitespace-pre-wrap max-md:text-sm ${
+                        item.completed ? 'line-through' : ''
+                      }`}
+                    >
+                      {item.tarefa}
+                    </p>
+                  </div>
+
+                  {item.end_date && 'Invalid Date' && (
+                    <div className="flex flex-col items-end w-1/4">
+                      <p className="text-xs font-medium max-md:text-[10px]">Data-limite</p>
+                      <p className={`max-md:text-xs ${item.completed ? 'line-through' : ''}`}>
+                        {new Date(item.end_date).toLocaleDateString()}
                       </p>
                     </div>
+                  )}
+                </div>
 
-                    {item.end_date && 'Invalid Date' && (
-                      <div className="flex flex-col items-end w-1/4">
-                        <p className=" text-xs font-medium">Data de Conclusão</p>
-                        <p className={`${item.completed ? 'line-through' : ''}`}>
-                          {new Date(item.end_date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer">
-                    {!item.completed ? (
-                      <button onClick={() => handleEditTask(item.id)}>
-                        <FaPen className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer" />
-                      </button>
+                <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:gap-2.5 max-md:ml-2.5">
+                  {!item.completed ? (
+                    <button onClick={() => handleEditTaskBtn(item)}>
+                      <FaPen className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                    </button>
+                  ) : (
+                    ''
+                  )}
+                  <button onClick={() => handleCompletedBtn(item.id, item.completed)}>
+                    {item.completed ? (
+                      <FaUndo className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
                     ) : (
-                      ''
+                      <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 cursor-pointer max-md:size-4" />
                     )}
-                    <button onClick={() => handleCompletedBtn(item.id, item.completed)}>
-                      {item.completed ? (
-                        <FaUndo className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer" />
+                  </button>
+
+                  {item.completed && (
+                    <button onClick={() => handleArchivedBtn(item.id)}>
+                      {item.archived ? (
+                        <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                       ) : (
-                        <FaCheck className="size-5 hover:text-green transition-all duration-300 cursor-pointer" />
+                        <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                       )}
                     </button>
-                    {item.completed && (
-                      <button onClick={() => handleArchivedBtn(item.id)}>
-                        {item.archived ? (
-                          <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer" />
-                        ) : (
-                          <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer" />
-                        )}
-                      </button>
-                    )}
-                    <button onClick={() => handleRemoveTaskBtn(item.id)}>
-                      <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer" />
-                    </button>
-                  </div>
+                  )}
+                  <button onClick={() => handleRemoveTaskBtn(item.id)}>
+                    <FaTrashAlt className="size-5 hover:text-red-300 transition-all duration-300 cursor-pointer max-md:size-4" />
+                  </button>
                 </div>
-              </article>
-            ))
-          )}
-
-          <div className="flex justify-center">
-            <button
-              className="bg-blue-500 text-gray-100 font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 cursor-pointer"
-              onClick={handleCreateTask}
-            >
-              Criar nova tarefa
-            </button>
-          </div>
+              </div>
+            </article>
+          ))}
         </section>
       </main>
     </div>

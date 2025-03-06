@@ -4,7 +4,6 @@ import Loading from '@/components/loading'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Image from 'next/image'
-import Link from 'next/link'
 
 export default function Home() {
   const { data: session, status } = useSession()
@@ -26,22 +25,12 @@ export default function Home() {
               alt="Imagem de uma pessoa escrevendo uma lista de tarefas"
               width={'480'}
               height={'480'}
-              priority
+              className="w-76 h-76 md:w-86 md:h-86 lg:w-[480px] lg:h-[480px] max-w-full"
             />
 
-            <h1 className="font-heading text-center text-3xl leading-10 font-medium max-w-2xl flex flex-col md:text-4xl">
+            <h1 className="font-heading text-center text-2xl leading-10 font-medium max-w-2xl flex flex-col md:text-4xl">
               SISTEMA FEITO PARA VOCÊ ORGANIZAR SEUS ESTUDOS E TAREFAS
             </h1>
-
-            <div>
-              <section className="flex flex-row">
-                {session?.user && (
-                  <Link href="/create" className="button">
-                    Criar Nova Tarefa
-                  </Link>
-                )}
-              </section>
-            </div>
           </div>
         </div>
       </main>

@@ -6,9 +6,12 @@
   --color-blue-500: #049dd9;
   --color-blue-700: #0477bf;
 
-  --color-red: #ff3f2f;
+  --color-red-300: #f13d30;
+  --color-red-500: #cf2a1f;
+  --color-red-700: #b6251b;
 
-  --color-green: #2ebc7d;
+  --color-green-500: #0aa649;
+  --color-green-700: #04963f;
 
   --color-yellow: #edca06;
 
@@ -44,4 +47,11 @@
 
 .height-home {
   height: calc(100dvh - 80px);
+}
+
+@media (max-width: 768px) {
+  .height-home {
+    height: auto;
+    min-height: calc(80vh - 80px);
+  }
 }

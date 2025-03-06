@@ -106,46 +106,52 @@ export default function ArchivedTasks() {
       </Head>
 
       <main>
-        <section className="mt-12 flex flex-col">
+        <section className="mt-12 flex flex-col max-md:mt-6">
           <h1 className="text-center font-heading text-4xl font-bold text-gray-100 mb-8">
             Tarefas Arquivadas
           </h1>
-          {tasks.filter((item) => item.completed).length === 0 ? (
+          {tasks.filter((item) => item.archived && item.completed).length === 0 ? (
             <p className="text-center text-gray-400">Nenhuma tarefa arquivada.</p>
           ) : (
             tasks.map((item) =>
               item.archived && item.completed ? (
                 <article
                   key={item.id}
-                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start border shadow-2xl shadow-gray-900/50 text-gray-100 hover:scale-101 transition-all duration-300"
+                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start border outline-none focus:outline-none shadow-2xl shadow-gray-900/50 text-gray-100 hover:scale-101 transition-all duration-300"
                 >
                   <div className="flex items-center w-full justify-between">
                     <div className="flex w-full gap-4">
                       <div className="flex flex-col w-2/3">
-                        <p className="text-xs font-medium text-gray-200">Descrição</p>
-                        <p className="whitespace-pre-wrap">{item.tarefa}</p>
+                        <p className="text-xs font-medium text-gray-200 max-md:text-[10px]">
+                          Descrição
+                        </p>
+                        <p className="whitespace-pre-wrap max-md:text-sm">{item.tarefa}</p>
                       </div>
 
                       {item.end_date && 'Invalid Date' && (
                         <div className="flex flex-col items-end w-1/4">
-                          <p className=" text-xs font-medium text-gray-200">Data de Conclusão</p>
-                          <p>{new Date(item.end_date).toLocaleDateString()}</p>
+                          <p className=" text-xs font-medium text-gray-200 max-md:text-[10px]">
+                            Data-limite
+                          </p>
+                          <p className="max-md:text-xs">
+                            {new Date(item.end_date).toLocaleDateString()}
+                          </p>
                         </div>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer">
+                    <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:ml-2.5">
                       {item.completed && (
                         <button onClick={() => handleArchivedBtn(item.id)}>
                           {item.archived ? (
-                            <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer" />
+                            <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                           ) : (
-                            <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer" />
+                            <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                           )}
                         </button>
                       )}
                       <button onClick={() => handleRemoveTaskBtn(item.id)}>
-                        <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer" />
+                        <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer max-md:size-4" />
                       </button>
                     </div>
                   </div>
