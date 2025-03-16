@@ -25,6 +25,7 @@ import {
 } from 'firebase/firestore'
 
 import Loading from '@/components/loading'
+import { showAlert, showAlertUser, showConfirmationAlert } from '@/components/alert'
 
 interface TaskProps {
   id: string
@@ -64,6 +65,19 @@ export default function Dashboard() {
     })
   }, [session?.user?.email])
 
+  useEffect(() => {
+    const username = session?.user?.name?.split(' ')[0]
+
+    if (session?.user) {
+      const hasLoggedInBefore = localStorage.getItem('hasLoggedIn')
+
+      if (!hasLoggedInBefore) {
+        showAlertUser(`👽 Seja bem-vindo(a) ${username}`)
+        localStorage.setItem('hasLoggedIn', 'true')
+      }
+    }
+  }, [status])
+
   if (status === 'loading') {
     return <Loading />
   }
@@ -71,10 +85,11 @@ export default function Dashboard() {
   if (!session) {
     redirect('/')
   }
+
   async function handleRegisterTask(event: FormEvent) {
     event.preventDefault()
 
-    if (input === '') return alert('Digite uma tarefa!')
+    if (input === '') return showAlert('error', 'Erro ao salvar a tarefa!')
 
     try {
       if (editTaskId) {
@@ -95,10 +110,14 @@ export default function Dashboard() {
         })
       }
 
+      showAlert('success', 'A tarefa foi salva com sucesso!')
+
       setInput('')
       setEndDate('')
     } catch (error) {
       console.log(error)
+
+      showAlert('error', 'Erro ao salvar a tarefa!')
     }
   }
 
@@ -139,7 +158,9 @@ export default function Dashboard() {
         await updateDoc(taskRef, {
           archived: !currentArchivedState,
         })
-        alert(`Tarefa ${currentArchivedState ? 'desarquivada' : 'arquivada'} com sucesso!`)
+        currentArchivedState
+          ? showAlert('info', 'Tarefa desarquivada!')
+          : showAlert('success', 'Tarefa arquivada!')
       } else {
         console.error('Tarefa não encontrada!')
       }
@@ -149,15 +170,20 @@ export default function Dashboard() {
   }
 
   async function handleRemoveTaskBtn(taskId: string) {
-    const confirmDelete = window.confirm('Tem certeza que deseja excluir esta tarefa?')
-
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(db, 'tarefas', taskId))
-      } catch (error) {
-        console.error('Erro ao excluir tarefa:', error)
-      }
-    }
+    showConfirmationAlert({
+      children: <FaTrashAlt className="size-5 flex items-center justify-center" />,
+      title: 'Excluir Tarefa?',
+      content: 'Essa ação não pode ser desfeita.',
+      onConfirm: async () => {
+        try {
+          await deleteDoc(doc(db, 'tarefas', taskId))
+          showAlert('error', 'Tarefa excluída!')
+        } catch (error) {
+          console.error('Erro ao excluir tarefa:', error)
+          showAlert('error', 'Erro ao excluir tarefa!')
+        }
+      },
+    })
   }
 
   return (
@@ -190,7 +216,7 @@ export default function Dashboard() {
                 <input
                   type="date"
                   id="end_date"
-                  className="w-full px-3 py-2 border-2 border-gray-300 rounded-xl text-gray-300 outline-none focus:outline-none max-md:text-sm"
+                  className="w-full px-3 py-2 border border-gray-500 rounded-xl text-gray-300 outline-none focus:outline-none max-md:text-sm"
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />

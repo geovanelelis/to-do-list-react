@@ -22,6 +22,8 @@ import {
 } from 'firebase/firestore'
 
 import Loading from '@/components/loading'
+import { showAlert, showConfirmationAlert } from '@/components/alert'
+import Button from '@/components/button'
 
 interface TaskProps {
   id: string
@@ -104,7 +106,9 @@ function SavedTasksContent() {
         await updateDoc(taskRef, {
           archived: !currentArchivedState,
         })
-        alert(`Tarefa ${currentArchivedState ? 'desarquivada' : 'arquivada'} com sucesso!`)
+        currentArchivedState
+          ? showAlert('info', 'Tarefa desarquivada!')
+          : showAlert('success', 'Tarefa arquivada!')
       } else {
         console.log('Tarefa não encontrada')
       }
@@ -114,15 +118,20 @@ function SavedTasksContent() {
   }
 
   async function handleRemoveTaskBtn(taskId: string) {
-    const confirmDelete = window.confirm('Tem certeza que deseja excluir esta tarefa?')
-
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(db, 'tarefas', taskId))
-      } catch (error) {
-        console.error('Erro ao excluir tarefa:', error)
-      }
-    }
+    showConfirmationAlert({
+      children: <FaTrashAlt className="size-5 flex items-center justify-center" />,
+      title: 'Excluir Tarefa?',
+      content: 'Essa ação não pode ser desfeita.',
+      onConfirm: async () => {
+        try {
+          await deleteDoc(doc(db, 'tarefas', taskId))
+          showAlert('error', 'Tarefa excluída!')
+        } catch (error) {
+          console.error('Erro ao excluir tarefa:', error)
+          showAlert('error', 'Erro ao excluir tarefa!')
+        }
+      },
+    })
   }
 
   function handleEditTask(taskId: string) {
@@ -182,31 +191,31 @@ function SavedTasksContent() {
 
                   <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:ml-2.5">
                     {!item.completed ? (
-                      <button onClick={() => handleEditTask(item.id)}>
+                      <Button onClick={() => handleEditTask(item.id)}>
                         <FaPen className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
-                      </button>
+                      </Button>
                     ) : (
                       ''
                     )}
-                    <button onClick={() => handleCompletedBtn(item.id, item.completed)}>
+                    <Button onClick={() => handleCompletedBtn(item.id, item.completed)}>
                       {item.completed ? (
                         <FaUndo className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
                       ) : (
                         <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 cursor-pointer max-md:size-4" />
                       )}
-                    </button>
+                    </Button>
                     {item.completed && (
-                      <button onClick={() => handleArchivedBtn(item.id)}>
+                      <Button onClick={() => handleArchivedBtn(item.id)}>
                         {item.archived ? (
                           <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                         ) : (
                           <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                         )}
-                      </button>
+                      </Button>
                     )}
-                    <button onClick={() => handleRemoveTaskBtn(item.id)}>
+                    <Button onClick={() => handleRemoveTaskBtn(item.id)}>
                       <FaTrashAlt className="size-5 hover:text-red-300 transition-all duration-300 cursor-pointer max-md:size-4" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </article>
@@ -214,12 +223,12 @@ function SavedTasksContent() {
           )}
 
           <div className="flex justify-center">
-            <button
+            <Button
               className=" mt-4.5 bg-blue-500 text-gray-100 font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 cursor-pointer"
               onClick={handleCreateTask}
             >
               Criar nova tarefa
-            </button>
+            </Button>
           </div>
         </section>
       </main>

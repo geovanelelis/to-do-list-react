@@ -5,8 +5,12 @@ import { useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { FaBars, FaXmark } from 'react-icons/fa6'
-import { BiLogIn, BiLogOut, BiSearch } from 'react-icons/bi'
+import { BiSearch } from 'react-icons/bi'
 import NavItem, { NavItemProps } from './navitem'
+import Image from 'next/image'
+import Button from './button'
+import { FaSignOutAlt } from 'react-icons/fa'
+import { showAlert, showConfirmationAlert } from './alert'
 
 export function Header() {
   const items: NavItemProps[] = [
@@ -24,24 +28,26 @@ export function Header() {
   const [search, setSearch] = useState('')
 
   return (
-    <header className="w-full h-20 bg-gray-700 shadow-lg shadow-gray-900/50 flex items-center justify-center">
-      <section className="px-6 w-full max-w-[1240px] flex items-center justify-between">
-        <nav className="flex justify-between">
+    <header className="w-full h-15 bg-gray-900 shadow-lg border-b border-gray-600 shadow-gray-900/50 flex items-center justify-center">
+      <section className="px-6 w-full max-w-[1240px] flex items-center justify-between max-md:grid max-md:grid-cols-[auto_1fr_auto] max-md:gap-6">
+        <nav className="flex items-center gap-8">
           {/*---------------- LOGO DO PROJETO ----------------*/}
           <Link href="/">
-            <h1 className="font-heading text-3xl leading-none font-medium flex flex-row md:text-4xl">
-              Taref
-              <span className="text-blue-500">inhas</span>
-            </h1>
+            <Image
+              src={'/logotarefinhas.png'}
+              alt="Logo do site tarefinhas"
+              width={35}
+              height={35}
+            ></Image>
           </Link>
 
           {/*---------------- LISTA DE PÁGINAS ----------------*/}
 
           {session?.user && (
             <ul
-              className={`z-1 xl:flex xl:ml-15 items-center xl:gap-15 max-xl:mt-4 max-xl:shadow-xl max-xl:shadow-gray-900/50 ${
+              className={`z-1 md:flex items-center md:gap-8 max-md:mt-4 max-md:shadow-md max-md:shadow-gray-900/25 ${
                 isMenuOpen
-                  ? 'flex items-center flex-col absolute top-15.5 left-0 m-0 w-full bg-gray-700'
+                  ? 'flex items-center flex-col absolute top-11 left-0 m-0 w-full bg-gray-900'
                   : 'hidden'
               }`}
             >
@@ -54,16 +60,34 @@ export function Header() {
                   onClick={() => setIsMenuOpen(false)}
                 />
               ))}
+
+              <NavItem
+                text="Sair"
+                isButton
+                onClick={() =>
+                  showConfirmationAlert({
+                    children: <></>,
+                    title: 'Deseja sair da conta?',
+                    content: '',
+                    onConfirm: () => {
+                      localStorage.removeItem('hasLoggedIn')
+                      signOut()
+                      showAlert('info', 'Você saiu da conta.')
+                    },
+                  })
+                }
+                children={<FaSignOutAlt className="size-4" />}
+              />
             </ul>
           )}
         </nav>
 
-        <div className="flex items-center gap-8 max-md:gap-3">
-          {/*---------------- CAMPO DE PESQUISA DE TAREFAS ----------------*/}
+        <div className="flw-1 flex items-center gap-8 max-md:gap-6 max-md:justify-end">
+          {/*---------------- CAMPO DE PESQUISA ----------------*/}
 
           {session?.user && (
-            <div className="relative hidden md:flex items-center justify-center gap-3">
-              <BiSearch className="absolute left-3 size-5.5 text-gray-200" />
+            <div className="relative flex-1 flex items-center">
+              <BiSearch className="absolute left-3 size-5 text-blue-300" />
               <input
                 type="text"
                 placeholder="Pesquisar..."
@@ -72,7 +96,7 @@ export function Header() {
                   setSearch(e.target.value)
                   router.push(`/savedtasks?search=${encodeURIComponent(e.target.value)}`)
                 }}
-                className="border-2 border-gray-300 text-gray-200 rounded-xl py-1.5 pl-10 outline-none"
+                className="bg-gray-800 border border-gray-600 text-gray-200 text-sm rounded-xl py-1 pl-10 outline-none max-xl:w-44 max-md:w-full"
               />
             </div>
           )}
@@ -81,44 +105,54 @@ export function Header() {
 
           {status === 'loading' ? (
             <></>
-          ) : session ? (
-            <button
-              className="flex text-base font-semibold text-gray-100 bg-red-500 items-center gap-1 rounded-xl px-5 py-1.5 
-            cursor-pointer hover:bg-red-700 transition-all duration-300 max-md:text-sm max-md:py-1 max-md:px-3
-            max-md:rounded-md"
-              onClick={() => signOut()}
-            >
-              Sair
-            </button>
           ) : (
-            <button
-              className="flex text-base font-semibold text-gray-100 bg-green-500 items-center gap-1 rounded-xl px-5 py-1.5 
-            cursor-pointer hover:bg-green-700 transition-all duration-300 max-md:text-sm max-md:py-1 max-md:px-3
-            max-md:rounded-md"
+            session && (
+              <Button
+                onClick={() => {
+                  const username = session?.user?.name?.split(' ')[0]
+
+                  showConfirmationAlert({
+                    children: <></>,
+                    title: `Deseja sair da conta, ${username}?`,
+                    content: '',
+                    onConfirm: () => {
+                      localStorage.removeItem('hasLoggedIn')
+                      signOut()
+                    },
+                  })
+                }}
+                className="max-md:hidden bg-gray-800 border border-gray-600 items-center px-5 py-1 cursor-pointer hover:text-red-300 hover:bg-gray-600"
+              >
+                Sair
+              </Button>
+            )
+          )}
+        </div>
+
+        {status === 'loading' ? (
+          <></>
+        ) : (
+          !session && (
+            <Button
+              className="bg-green-500 border-0 items-center px-5 py-1.5 cursor-pointer hover:bg-green-700"
               onClick={() => signIn('google')}
             >
               Entrar
-            </button>
-          )}
+            </Button>
+          )
+        )}
 
-          {/*---------------- BOTÃO DE MENU PARA DISPOSITÍVOS MENORES ----------------*/}
+        {/*---------------- BOTÃO DE MENU PARA DISPOSITÍVOS MENORES ----------------*/}
 
-          {session?.user && (
-            <button className="xl:hidden">
-              {isMenuOpen ? (
-                <FaXmark
-                  className="text-gray-200 size-8 block text-5xl cursor-pointer hover:text-gray-100 transition-all duration-300"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                />
-              ) : (
-                <FaBars
-                  className="text-gray-200 size-8 block text-5xl cursor-pointer hover:text-gray-100 transition-all duration-300"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                />
-              )}
-            </button>
-          )}
-        </div>
+        {session?.user && (
+          <Button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? (
+              <FaXmark className="text-gray-200 size-7 block text-5xl cursor-pointer hover:text-gray-300 transition-all duration-300" />
+            ) : (
+              <FaBars className="text-gray-200 size-7 block text-5xl cursor-pointer hover:text-gray-300 transition-all duration-300" />
+            )}
+          </Button>
+        )}
       </section>
     </header>
   )

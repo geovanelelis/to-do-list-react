@@ -3,8 +3,9 @@
 @theme {
   --color-*: initial;
 
-  --color-blue-500: #049dd9;
-  --color-blue-700: #0477bf;
+  --color-blue-300: #20a0de;
+  --color-blue-500: #0b7db8;
+  --color-blue-700: #006ba5;
 
   --color-red-300: #f13d30;
   --color-red-500: #cf2a1f;
@@ -15,20 +16,22 @@
 
   --color-yellow: #edca06;
 
+  --color-gray-50: #dae4f2;
   --color-gray-100: #dae4f2;
   --color-gray-200: #c8d0da;
   --color-gray-300: #95a1b1;
   --color-gray-400: #6f7d90;
   --color-gray-500: #2a313c;
-  --color-gray-600: #21252c;
-  --color-gray-700: #191d24;
-  --color-gray-800: #13161b;
-  --color-gray-900: #0f1216;
+  --color-gray-600: #2e2e39;
+  --color-gray-700: #23232b;
+  --color-gray-800: #18181e;
+  --color-gray-900: #101014;
+  --color-gray-950: #09090B;
 
   --font-heading: var(--font-oxanium);
   --font-sans: var(--font-montserrat);
 
-  --radius-xl: 0.625rem;
+  --radius-xl: 0.5rem;
 }
 
 .button {
@@ -46,12 +49,12 @@
 }
 
 .height-home {
-  height: calc(100dvh - 80px);
+  height: calc(100dvh - 60px);
 }
 
 @media (max-width: 768px) {
   .height-home {
     height: auto;
-    min-height: calc(80vh - 80px);
+    min-height: calc(80vh - 60px);
   }
 }

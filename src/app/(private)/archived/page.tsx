@@ -22,6 +22,8 @@ import {
 } from 'firebase/firestore'
 
 import Loading from '@/components/loading'
+import { showAlert, showConfirmationAlert } from '@/components/alert'
+import Button from '@/components/button'
 
 interface TaskProps {
   id: string
@@ -78,7 +80,9 @@ export default function ArchivedTasks() {
         await updateDoc(taskRef, {
           archived: !currentArchivedState,
         })
-        alert(`Tarefa ${currentArchivedState ? 'desarquivada' : 'arquivada'} com sucesso!`)
+        currentArchivedState
+          ? showAlert('info', 'Tarefa desarquivada!')
+          : showAlert('success', 'Tarefa arquivada!')
       } else {
         console.log('Tarefa não encontrada')
       }
@@ -88,15 +92,20 @@ export default function ArchivedTasks() {
   }
 
   async function handleRemoveTaskBtn(taskId: string) {
-    const confirmDelete = window.confirm('Tem certeza que deseja excluir esta tarefa?')
-
-    if (confirmDelete) {
-      try {
-        await deleteDoc(doc(db, 'tarefas', taskId))
-      } catch (error) {
-        console.error('Erro ao excluir tarefa:', error)
-      }
-    }
+    showConfirmationAlert({
+      children: <FaTrashAlt className="size-5 flex items-center justify-center" />,
+      title: 'Excluir Tarefa?',
+      content: 'Essa ação não pode ser desfeita.',
+      onConfirm: async () => {
+        try {
+          await deleteDoc(doc(db, 'tarefas', taskId))
+          showAlert('error', 'Tarefa excluída!')
+        } catch (error) {
+          console.error('Erro ao excluir tarefa:', error)
+          showAlert('error', 'Erro ao excluir tarefa!')
+        }
+      },
+    })
   }
 
   return (
@@ -107,7 +116,7 @@ export default function ArchivedTasks() {
 
       <main>
         <section className="mt-12 flex flex-col max-md:mt-6">
-          <h1 className="text-center font-heading text-4xl font-bold text-gray-100 mb-8">
+          <h1 className="text-center font-heading text-4xl font-bold text-gray-200 mb-8">
             Tarefas Arquivadas
           </h1>
           {tasks.filter((item) => item.archived && item.completed).length === 0 ? (
@@ -117,12 +126,12 @@ export default function ArchivedTasks() {
               item.archived && item.completed ? (
                 <article
                   key={item.id}
-                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start border outline-none focus:outline-none shadow-2xl shadow-gray-900/50 text-gray-100 hover:scale-101 transition-all duration-300"
+                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start border border-gray-500 outline-none focus:outline-none shadow-2xl shadow-gray-900/50 text-gray-300 hover:scale-101 transition-all duration-300"
                 >
                   <div className="flex items-center w-full justify-between">
                     <div className="flex w-full gap-4">
                       <div className="flex flex-col w-2/3">
-                        <p className="text-xs font-medium text-gray-200 max-md:text-[10px]">
+                        <p className="text-xs font-medium text-gray-300 max-md:text-[10px]">
                           Descrição
                         </p>
                         <p className="whitespace-pre-wrap max-md:text-sm">{item.tarefa}</p>
@@ -130,7 +139,7 @@ export default function ArchivedTasks() {
 
                       {item.end_date && 'Invalid Date' && (
                         <div className="flex flex-col items-end w-1/4">
-                          <p className=" text-xs font-medium text-gray-200 max-md:text-[10px]">
+                          <p className=" text-xs font-medium text-gray-300 max-md:text-[10px]">
                             Data-limite
                           </p>
                           <p className="max-md:text-xs">
@@ -142,17 +151,17 @@ export default function ArchivedTasks() {
 
                     <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:ml-2.5">
                       {item.completed && (
-                        <button onClick={() => handleArchivedBtn(item.id)}>
+                        <Button onClick={() => handleArchivedBtn(item.id)}>
                           {item.archived ? (
                             <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                           ) : (
                             <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
                           )}
-                        </button>
+                        </Button>
                       )}
-                      <button onClick={() => handleRemoveTaskBtn(item.id)}>
+                      <Button onClick={() => handleRemoveTaskBtn(item.id)}>
                         <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer max-md:size-4" />
-                      </button>
+                      </Button>
                     </div>
                   </div>
                 </article>
