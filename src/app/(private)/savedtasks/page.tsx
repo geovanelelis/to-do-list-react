@@ -160,10 +160,10 @@ function SavedTasksContent() {
             tasks.map((item) => (
               <article
                 key={item.id}
-                className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start hover:scale-101 transition-all duration-300 ${
+                className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start transition-all duration-300  ${
                   item.completed
-                    ? 'bg-gray-600 text-gray-200 opacity-60'
-                    : 'bg-gray-100 text-gray-900'
+                    ? 'bg-gray-950 text-primary-700 border border-b-5 border-primary-950'
+                    : 'bg-primary-950 text-primary-300 hover:scale-101'
                 }`}
               >
                 <div className="flex items-center w-full justify-between">
@@ -171,50 +171,58 @@ function SavedTasksContent() {
                     <div className="flex flex-col w-2/3">
                       <p className="text-xs font-medium max-md:text-[10px]">Descrição</p>
                       <p
-                        className={`whitespace-pre-wrap max-md:text-sm ${
-                          item.completed ? 'line-through' : ''
-                        }`}
+                        className={`whitespace-pre-wrap max-md:text-sm ${item.completed ? '' : ''}`}
                       >
                         {item.tarefa}
                       </p>
                     </div>
 
                     {item.end_date && 'Invalid Date' && (
-                      <div className="flex flex-col items-end w-1/4">
-                        <p className="text-xs font-medium max-md:text-[10px]">Data-limite</p>
-                        <p className={`max-md:text-xs ${item.completed ? 'line-through' : ''}`}>
-                          {new Date(item.end_date).toLocaleDateString()}
-                        </p>
+                      <div className="flex flex-col items-end w-1/4 justify-center">
+                        {!item.completed && (
+                          <p className="text-xs font-medium max-md:text-[10px]">Data-limite</p>
+                        )}
+                        {item.completed ? (
+                          <p className="text-lg max-md:text-base font-bold">concluída</p>
+                        ) : (
+                          <p className={`max-md:text-xs ${item.completed ? 'line-through' : ''}`}>
+                            {new Date(item.end_date).toLocaleDateString()}
+                          </p>
+                        )}
                       </div>
                     )}
                   </div>
 
-                  <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:ml-2.5">
+                  <div
+                    className={`flex items-center gap-4 ml-auto transition-all duration-300 max-md:gap-2.5 max-md:ml-2.5 ${
+                      item.completed ? 'text-gray-400' : 'text-gray-300'
+                    }`}
+                  >
                     {!item.completed ? (
                       <Button onClick={() => handleEditTask(item.id)}>
-                        <FaPen className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <FaPen className="size-5 hover:text-primary-300 transition-all duration-300 max-md:size-4" />
                       </Button>
                     ) : (
                       ''
                     )}
                     <Button onClick={() => handleCompletedBtn(item.id, item.completed)}>
                       {item.completed ? (
-                        <FaUndo className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <FaUndo className="size-5 hover:text-primary-300 transition-all duration-300 max-md:size-4" />
                       ) : (
-                        <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 max-md:size-4" />
                       )}
                     </Button>
                     {item.completed && (
                       <Button onClick={() => handleArchivedBtn(item.id)}>
                         {item.archived ? (
-                          <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
+                          <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 max-md:size-4" />
                         ) : (
-                          <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
+                          <MdArchive className="size-6 hover:text-yellow transition-all duration-300 max-md:size-4" />
                         )}
                       </Button>
                     )}
                     <Button onClick={() => handleRemoveTaskBtn(item.id)}>
-                      <FaTrashAlt className="size-5 hover:text-red-300 transition-all duration-300 cursor-pointer max-md:size-4" />
+                      <FaTrashAlt className="size-5 hover:text-red-500 transition-all duration-300 max-md:size-4" />
                     </Button>
                   </div>
                 </div>
@@ -224,7 +232,7 @@ function SavedTasksContent() {
 
           <div className="flex justify-center">
             <Button
-              className=" mt-4.5 bg-blue-500 text-gray-100 font-bold px-6 py-3 rounded-xl hover:bg-blue-700 transition-all duration-300 cursor-pointer"
+              className=" mt-4.5 bg-primary-700 text-gray-50 font-bold px-6 py-3 rounded-xl hover:bg-primary-900 transition-all duration-300"
               onClick={handleCreateTask}
             >
               Criar nova tarefa

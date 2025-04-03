@@ -26,6 +26,7 @@ import {
 
 import Loading from '@/components/loading'
 import { showAlert, showAlertUser, showConfirmationAlert } from '@/components/alert'
+import Button from '@/components/button'
 
 interface TaskProps {
   id: string
@@ -223,21 +224,21 @@ export default function Dashboard() {
               </div>
 
               <div className="flex gap-4">
-                <button
+                <Button
                   type="submit"
-                  className="font-bold px-7 py-2.5 w-full rounded-xl bg-blue-500 text-gray-100 cursor-pointer hover:bg-blue-700 transition-all duration-300 "
+                  className="font-semibold text-lg px-7 py-2.5 w-full rounded-xl bg-primary-500 text-gray-50 cursor-pointer hover:bg-primary-700 transition-all duration-300 "
                 >
                   Salvar
-                </button>
+                </Button>
 
                 {editTaskId && (
-                  <button
+                  <Button
                     type="button"
                     onClick={handleCancelEdit}
-                    className="font-bold px-7 py-2.5 w-full rounded-xl bg-gray-300 text-gray-900 cursor-pointer hover:bg-gray-200 transition-all duration-300"
+                    className="font-medium px-7 py-2.5 w-full rounded-xl bg-gray-300 text-gray-900 cursor-pointer hover:bg-gray-200 transition-all duration-300"
                   >
                     Cancelar
-                  </button>
+                  </Button>
                 )}
               </div>
             </form>
@@ -252,63 +253,69 @@ export default function Dashboard() {
           {tasks.map((item) => (
             <article
               key={item.id}
-              className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start hover:scale-101 transition-all duration-300  ${
+              className={`mb-3.5 flex rounded-xl p-3.5 flex-col items-start transition-all duration-300  ${
                 item.completed
-                  ? 'bg-gray-600 text-gray-200 opacity-60'
-                  : 'bg-gray-100 text-gray-900'
+                  ? 'bg-gray-950 text-primary-700 border border-b-5 border-primary-950'
+                  : 'bg-primary-950 text-primary-300 hover:scale-101'
               }`}
             >
               <div className="flex items-center w-full justify-between">
                 <div className="flex w-full gap-4">
                   <div className="flex flex-col w-2/3">
                     <p className="text-xs font-medium max-md:text-[10px]">Descrição</p>
-                    <p
-                      className={`whitespace-pre-wrap max-md:text-sm ${
-                        item.completed ? 'line-through' : ''
-                      }`}
-                    >
+                    <p className={`whitespace-pre-wrap max-md:text-sm ${item.completed ? '' : ''}`}>
                       {item.tarefa}
                     </p>
                   </div>
 
                   {item.end_date && 'Invalid Date' && (
-                    <div className="flex flex-col items-end w-1/4">
-                      <p className="text-xs font-medium max-md:text-[10px]">Data-limite</p>
-                      <p className={`max-md:text-xs ${item.completed ? 'line-through' : ''}`}>
-                        {new Date(item.end_date).toLocaleDateString()}
-                      </p>
+                    <div className="flex flex-col items-end w-1/4 justify-center">
+                      {!item.completed && (
+                        <p className="text-xs font-medium max-md:text-[10px]">Data-limite</p>
+                      )}
+                      {item.completed ? (
+                        <p className="text-lg max-md:text-base font-bold">concluída</p>
+                      ) : (
+                        <p className={`max-md:text-xs ${item.completed ? 'line-through' : ''}`}>
+                          {new Date(item.end_date).toLocaleDateString()}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
 
-                <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:gap-2.5 max-md:ml-2.5">
+                <div
+                  className={`flex items-center gap-4 ml-auto transition-all duration-300 max-md:gap-2.5 max-md:ml-2.5 ${
+                    item.completed ? 'text-gray-400' : 'text-gray-300'
+                  }`}
+                >
                   {!item.completed ? (
-                    <button onClick={() => handleEditTaskBtn(item)}>
-                      <FaPen className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
-                    </button>
+                    <Button onClick={() => handleEditTaskBtn(item)}>
+                      <FaPen className="size-5 hover:text-primary-300 transition-all duration-300 max-md:size-4" />
+                    </Button>
                   ) : (
                     ''
                   )}
-                  <button onClick={() => handleCompletedBtn(item.id, item.completed)}>
+                  <Button onClick={() => handleCompletedBtn(item.id, item.completed)}>
                     {item.completed ? (
-                      <FaUndo className="size-5 hover:text-blue-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                      <FaUndo className="size-5 hover:text-primary-300 transition-all duration-300 max-md:size-4" />
                     ) : (
-                      <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                      <FaCheck className="size-5 hover:text-green-500 transition-all duration-300 max-md:size-4" />
                     )}
-                  </button>
+                  </Button>
 
                   {item.completed && (
-                    <button onClick={() => handleArchivedBtn(item.id)}>
+                    <Button onClick={() => handleArchivedBtn(item.id)}>
                       {item.archived ? (
-                        <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 max-md:size-4" />
                       ) : (
-                        <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <MdArchive className="size-6 hover:text-yellow transition-all duration-300 max-md:size-4" />
                       )}
-                    </button>
+                    </Button>
                   )}
-                  <button onClick={() => handleRemoveTaskBtn(item.id)}>
-                    <FaTrashAlt className="size-5 hover:text-red-300 transition-all duration-300 cursor-pointer max-md:size-4" />
-                  </button>
+                  <Button onClick={() => handleRemoveTaskBtn(item.id)}>
+                    <FaTrashAlt className="size-5 hover:text-red-500 transition-all duration-300 max-md:size-4" />
+                  </Button>
                 </div>
               </div>
             </article>

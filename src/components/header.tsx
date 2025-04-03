@@ -28,7 +28,7 @@ export function Header() {
   const [search, setSearch] = useState('')
 
   return (
-    <header className="w-full h-15 bg-gray-900 shadow-lg border-b border-gray-600 shadow-gray-900/50 flex items-center justify-center">
+    <header className="w-full h-15 text-gray-100 bg-gray-950 shadow-lg border-b border-gray-800 shadow-gray-950/50 flex items-center justify-center">
       <section className="px-6 w-full max-w-[1240px] flex items-center justify-between max-md:grid max-md:grid-cols-[auto_1fr_auto] max-md:gap-6">
         <nav className="flex items-center gap-8">
           {/*---------------- LOGO DO PROJETO ----------------*/}
@@ -45,9 +45,9 @@ export function Header() {
 
           {session?.user && (
             <ul
-              className={`z-1 md:flex items-center md:gap-8 max-md:mt-4 max-md:shadow-md max-md:shadow-gray-900/25 ${
+              className={`z-1 md:flex items-center md:gap-8 max-md:mt-4 max-md:shadow-md max-md:shadow-gray-900/50 ${
                 isMenuOpen
-                  ? 'flex items-center flex-col absolute top-11 left-0 m-0 w-full bg-gray-900'
+                  ? 'flex items-center flex-col absolute top-11 left-0 m-0 w-full bg-gray-950'
                   : 'hidden'
               }`}
             >
@@ -87,7 +87,7 @@ export function Header() {
 
           {session?.user && (
             <div className="relative flex-1 flex items-center">
-              <BiSearch className="absolute left-3 size-5 text-blue-300" />
+              <BiSearch className="absolute left-3 size-5 text-primary-300" />
               <input
                 type="text"
                 placeholder="Pesquisar..."
@@ -96,7 +96,7 @@ export function Header() {
                   setSearch(e.target.value)
                   router.push(`/savedtasks?search=${encodeURIComponent(e.target.value)}`)
                 }}
-                className="bg-gray-800 border border-gray-600 text-gray-200 text-sm rounded-xl py-1 pl-10 outline-none max-xl:w-44 max-md:w-full"
+                className="bg-gray-950 border border-gray-600 text-gray-100 text-sm rounded-xl py-1 pl-10 outline-none max-xl:w-44 max-md:w-full"
               />
             </div>
           )}
@@ -121,26 +121,13 @@ export function Header() {
                     },
                   })
                 }}
-                className="max-md:hidden bg-gray-800 border border-gray-600 items-center px-5 py-1 cursor-pointer hover:text-red-300 hover:bg-gray-600"
+                className="max-md:hidden text-gray-200 bg-red-700 border border-red-700 rounded-xl items-center px-5 py-1 cursor-pointer  hover:bg-red-800 hover:border-red-800"
               >
                 Sair
               </Button>
             )
           )}
         </div>
-
-        {status === 'loading' ? (
-          <></>
-        ) : (
-          !session && (
-            <Button
-              className="bg-green-500 border-0 items-center px-5 py-1.5 cursor-pointer hover:bg-green-700"
-              onClick={() => signIn('google')}
-            >
-              Entrar
-            </Button>
-          )
-        )}
 
         {/*---------------- BOTÃO DE MENU PARA DISPOSITÍVOS MENORES ----------------*/}
 

@@ -126,12 +126,12 @@ export default function ArchivedTasks() {
               item.archived && item.completed ? (
                 <article
                   key={item.id}
-                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start border border-gray-500 outline-none focus:outline-none shadow-2xl shadow-gray-900/50 text-gray-300 hover:scale-101 transition-all duration-300"
+                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start outline-none focus:outline-none border border-b-5 border-primary-950 text-primary-300 bg-gray-950"
                 >
                   <div className="flex items-center w-full justify-between">
                     <div className="flex w-full gap-4">
                       <div className="flex flex-col w-2/3">
-                        <p className="text-xs font-medium text-gray-300 max-md:text-[10px]">
+                        <p className="text-xs font-medium text-primary-500 max-md:text-[10px]">
                           Descrição
                         </p>
                         <p className="whitespace-pre-wrap max-md:text-sm">{item.tarefa}</p>
@@ -139,7 +139,7 @@ export default function ArchivedTasks() {
 
                       {item.end_date && 'Invalid Date' && (
                         <div className="flex flex-col items-end w-1/4">
-                          <p className=" text-xs font-medium text-gray-300 max-md:text-[10px]">
+                          <p className=" text-xs font-medium text-primary-500 max-md:text-[10px]">
                             Data-limite
                           </p>
                           <p className="max-md:text-xs">
@@ -149,7 +149,7 @@ export default function ArchivedTasks() {
                       )}
                     </div>
 
-                    <div className="flex items-center gap-4 ml-auto transition-all duration-300 cursor-pointer max-md:ml-2.5">
+                    <div className="flex items-center gap-4 ml-auto text-gray-300 transition-all duration-300 cursor-pointer max-md:ml-2.5">
                       {item.completed && (
                         <Button onClick={() => handleArchivedBtn(item.id)}>
                           {item.archived ? (
@@ -160,7 +160,7 @@ export default function ArchivedTasks() {
                         </Button>
                       )}
                       <Button onClick={() => handleRemoveTaskBtn(item.id)}>
-                        <FaTrashAlt className="size-5 hover:text-red transition-all duration-300 cursor-pointer max-md:size-4" />
+                        <FaTrashAlt className="size-5 hover:text-red-500 transition-all duration-300 cursor-pointer max-md:size-4" />
                       </Button>
                     </div>
                   </div>

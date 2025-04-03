@@ -78,12 +78,12 @@ type ConfirmationAlertProps = {
 function WithActions({ title, content, children, closeToast, onConfirm }: ConfirmationAlertProps) {
   return (
     <div className="flex flex-col w-full gap-2 p-1">
-      <h3 className="text-base font-semibold flex items-center gap-2 text-gray-500">
+      <h3 className="text-base font-semibold flex items-center gap-2 text-primary-950">
         {children}
         {title}
       </h3>
 
-      <p className="text-md">{content}</p>
+      <p className="text-md text-primary-900">{content}</p>
 
       <div className="flex items-end justify-end gap-2">
         <Button
@@ -91,13 +91,13 @@ function WithActions({ title, content, children, closeToast, onConfirm }: Confir
             onConfirm()
             closeToast()
           }}
-          className="transition-all duration-300 text-sm font-semibold bg-blue-500 border-none rounded-md py-1 px-3 text-gray-100 hover:bg-blue-700"
+          className="transition-all duration-300 text-sm font-semibold bg-primary-900 border-none rounded-md py-1.5 px-5 text-gray-50 hover:bg-primary-950"
         >
           Sim
         </Button>
         <Button
           onClick={closeToast}
-          className="transition-all duration-300 text-sm font-semibold bg-blue-500 border-none rounded-md py-1 px-3 text-gray-100 hover:bg-blue-700"
+          className="transition-all duration-300 text-sm font-semibold bg-primary-900 border-none rounded-md py-1.5 px-5 text-gray-50 hover:bg-primary-950"
         >
           Não
         </Button>

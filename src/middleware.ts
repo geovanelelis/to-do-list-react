@@ -8,23 +8,23 @@ export async function middleware(req: NextRequest) {
 
   const isAuthenticated = !!token
 
-  if (isAuthenticated && pathname === '/login') {
+  if (isAuthenticated && pathname === '/auth') {
     return NextResponse.redirect(new URL('/', req.url))
   }
 
   const privateRoutes = ['/dashboard', '/archived', '/savedtasks']
 
   if (!isAuthenticated && privateRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.redirect(new URL('/login', req.url))
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
   if (!isAuthenticated && pathname === '/') {
-    return NextResponse.redirect(new URL('/login', req.url))
+    return NextResponse.redirect(new URL('/auth', req.url))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/', '/login', '/dashboard', '/archived', '/savedtasks'],
+  matcher: ['/', '/auth', '/dashboard', '/archived', '/savedtasks'],
 }
