@@ -202,7 +202,7 @@ export default function Dashboard() {
 
             <form className="w-full flex flex-col gap-4" onSubmit={handleRegisterTask}>
               <div>
-                <label className="text-gray-100 font-medium max-md:text-sm">Descrição</label>
+                <label className="text-gray-300 font-medium max-md:text-sm">Descrição</label>
                 <Textarea
                   placeholder="Digite sua tarefa..."
                   value={input}
@@ -211,13 +211,13 @@ export default function Dashboard() {
                   }
                 />
 
-                <label htmlFor="end_date" className="text-gray-100 font-medium max-md:text-sm">
+                <label htmlFor="end_date" className="text-gray-300 font-medium max-md:text-sm">
                   Data de Conclusão
                 </label>
                 <input
                   type="date"
                   id="end_date"
-                  className="w-full px-3 py-2 border border-gray-500 rounded-xl text-gray-300 outline-none focus:outline-none max-md:text-sm"
+                  className="backdrop-blur-xs bg-gray-950/0 w-full p-3 border border-gray-700/70 rounded-xl text-gray-300 outline-none focus:outline-none max-md:text-sm"
                   value={endDate}
                   onChange={(event) => setEndDate(event.target.value)}
                 />

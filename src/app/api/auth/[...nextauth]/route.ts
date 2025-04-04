@@ -15,6 +15,12 @@ const handler = NextAuth({
     GithubProvider({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
+      authorization: {
+        params: {
+          url: 'https://github.com/login/oauth/authorize',
+          scope: 'user:email',
+        },
+      },
     }),
     CredentialsProvider({
       name: 'Credentials',

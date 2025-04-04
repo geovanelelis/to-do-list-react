@@ -28,7 +28,7 @@ export function Header() {
   const [search, setSearch] = useState('')
 
   return (
-    <header className="w-full h-15 text-gray-100 bg-gray-950 shadow-lg border-b border-gray-800 shadow-gray-950/50 flex items-center justify-center">
+    <header className="sticky z-40 backdrop-blur-xs w-full h-15 text-gray-100 bg-gray-950/0 shadow-lg border-b border-gray-800 shadow-gray-950/50 flex items-center justify-center">
       <section className="px-6 w-full max-w-[1240px] flex items-center justify-between max-md:grid max-md:grid-cols-[auto_1fr_auto] max-md:gap-6">
         <nav className="flex items-center gap-8">
           {/*---------------- LOGO DO PROJETO ----------------*/}
@@ -45,9 +45,9 @@ export function Header() {
 
           {session?.user && (
             <ul
-              className={`z-1 md:flex items-center md:gap-8 max-md:mt-4 max-md:shadow-md max-md:shadow-gray-900/50 ${
+              className={`z-50 max-md:fixed w-full md:flex items-center md:gap-8 max-md:mt-4 max-md:shadow-md max-md:shadow-gray-900/50 ${
                 isMenuOpen
-                  ? 'flex items-center flex-col absolute top-11 left-0 m-0 w-full bg-gray-950'
+                  ? 'flex items-center flex-col top-11 left-0 m-0 w-full bg-gray-950'
                   : 'hidden'
               }`}
             >
@@ -72,7 +72,6 @@ export function Header() {
                     onConfirm: () => {
                       localStorage.removeItem('hasLoggedIn')
                       signOut()
-                      showAlert('info', 'Você saiu da conta.')
                     },
                   })
                 }
@@ -101,7 +100,7 @@ export function Header() {
             </div>
           )}
 
-          {/*---------------- BOTÃO DE LOGIN / LOGOUT ----------------*/}
+          {/*---------------- BOTÃO DE LOGOUT ----------------*/}
 
           {status === 'loading' ? (
             <></>

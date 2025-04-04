@@ -5,6 +5,7 @@ import type { Metadata } from 'next'
 import { Oxanium, Montserrat } from 'next/font/google'
 import AuthProvider from '@/components/sessionprovider'
 import { ToastContainer } from 'react-toastify'
+import { ParticlesComponent } from '@/components/particles'
 
 export const metadata: Metadata = {
   title: 'To Do List',
@@ -35,6 +36,7 @@ export default function RootLayout({
           {children}
           <ToastContainer />
         </AuthProvider>
+        <ParticlesComponent />
       </body>
     </html>
   )

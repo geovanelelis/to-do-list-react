@@ -16,7 +16,6 @@ import { setDoc, doc } from 'firebase/firestore'
 import { auth, db } from '@/services/firebaseConnection'
 import { showAlert } from '@/components/alert'
 import Loading from '@/components/loading'
-import Link from 'next/link'
 
 function AuthContent() {
   const router = useRouter()
@@ -114,28 +113,25 @@ function AuthContent() {
       </Head>
 
       <main className="w-full mx-auto">
-        <div className="min-h-[100dvh] flex items-center justify-center flex-col gap-8 overflow-hidden px-4 py-4 sm:py-0">
-          <div className="flex flex-col items-center gap-4">
-            <div className="flex gap-5 w-full items-center justify-center">
+        <div className="min-h-[100dvh] flex items-center justify-center xl:justify-evenly max-xl:flex-col gap-8 overflow-hidden px-4 py-4 sm:py-0 xl:px-8">
+          <div className="flex flex-col items-center gap-6 ">
+            <div className="flex gap-3 xl:gap-6 w-full items-center justify-center">
               <Image
-                src="/logotarefinhas.png"
+                src="/logocompleta.png"
                 alt="Logo Tarefinhas"
-                width={120}
-                height={120}
-                className="w-20 max-w-full"
+                width={'680'}
+                height={'680'}
+                className="w-[520px] xl:w-[680px]"
               />
-              <h1 className="flex text-6xl sm:text-7xl font-heading font-black text-gray-300 relative top-3.5 sm:top-4">
-                Tarefinhas
-              </h1>
             </div>
-            <h1 className="hidden sm:flex text-gray-300 w-full max-w-[540px] sm:w-full font-sans leading-6 items-center justify-center text-center font-medium text-sm sm:text-base">
+            <h1 className="hidden sm:flex text-gray-300 w-full font-sans leading-6 items-center justify-center text-center font-medium text-base xl:text-xl">
               O MELHOR SISTEMA PARA ORGANIZAR SUAS TAREFAS
             </h1>
           </div>
 
-          <div className="bg-gray-900 w-full max-w-[540px] rounded-2xl text-gray-200 border border-gray-700 p-6 sm:p-10 flex items-center justify-center flex-col gap-6">
+          <div className="backdrop-blur-xs bg-gray-900/0 w-full max-w-[540px] rounded-2xl text-gray-100 border border-gray-700/70 p-6 sm:p-10 flex items-center justify-center flex-col gap-6">
             <span className="text-center">
-              <h1 className="text-4xl text-gray-200 font-black mb-1">
+              <h1 className="text-3xl sm:text-4xl text-gray-200 font-black mb-1">
                 {mode === 'login' ? 'Login' : 'Crie sua conta'}
               </h1>
               <p className="">{mode === 'login' ? 'Entre com sua conta.' : 'É rápido e fácil.'}</p>
@@ -152,14 +148,14 @@ function AuthContent() {
                     <input
                       type="text"
                       placeholder="Nome"
-                      className="text-sm bg-gray-800 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700"
+                      className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
                     />
                     <input
                       type="text"
                       placeholder="Sobrenome"
-                      className="text-sm bg-gray-800 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700"
+                      className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
                     />
@@ -169,20 +165,20 @@ function AuthContent() {
               <input
                 type="email"
                 placeholder="Email"
-                className="text-sm bg-gray-800 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700"
+                className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input
                 type="password"
                 placeholder="Senha"
-                className="text-sm bg-gray-800 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700"
+                className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button
                 type="submit"
-                className="bg-primary-700 text-gray-100 py-2 mt-4 hover:bg-primary-500 rounded-xl"
+                className="bg-primary-700 py-2 mt-4 hover:bg-primary-500 rounded-xl"
               >
                 {mode === 'login' ? 'Entrar' : 'Cradastrar'}
               </Button>
@@ -192,27 +188,27 @@ function AuthContent() {
               {mode === 'login' ? (
                 <>
                   Não tem uma conta?{' '}
-                  <Link
-                    href={'/auth?mode=register'}
-                    className="text-primary-700 hover:text-primary-500 transition-colors duration-300 cursor-pointer"
+                  <Button
+                    onClick={() => router.push('/auth?mode=register')}
+                    className="text-primary-500 hover:text-primary-300 transition-colors duration-300 cursor-pointer"
                   >
                     Criar conta
-                  </Link>
+                  </Button>
                 </>
               ) : (
                 <>
                   Já tem uma conta?{' '}
-                  <Link
-                    href={'/auth?mode=login'}
-                    className="text-primary-700 hover:text-primary-500 transition-colors duration-300 cursor-pointer"
+                  <Button
+                    onClick={() => router.push('/auth?mode=login')}
+                    className="text-primary-500 hover:text-primary-300 transition-colors duration-300 cursor-pointer"
                   >
                     Entrar
-                  </Link>
+                  </Button>
                 </>
               )}
             </p>
 
-            <div className="flex items-center justify-center gap-2 w-full">
+            <div className="flex items-center justify-center gap-4 w-full">
               <hr className="text-gray-600 w-full" />
               <p>ou</p>
               <hr className="text-gray-600 w-full" />
@@ -221,13 +217,13 @@ function AuthContent() {
             <div className="flex items-center justify-center gap-6 w-full">
               <Button
                 onClick={() => signIn('google')}
-                className="px-3.5 py-3.5 bg-gray-700 rounded-full hover:bg-gray-800"
+                className="px-3.5 py-3.5 bg-gray-700/50 rounded-full hover:bg-gray-800/50"
               >
                 <FaGoogle className="size-6 text-primary-500 hover:text-primary-700 transition-colors duration-300" />
               </Button>
               <Button
                 onClick={() => signIn('github')}
-                className="px-3.5 py-3.5 bg-gray-700 rounded-full hover:bg-gray-800"
+                className="px-3.5 py-3.5 bg-gray-700/50 rounded-full hover:bg-gray-800/50"
               >
                 {' '}
                 <FaGithub className="size-6 text-primary-500 hover:text-primary-700 transition-colors duration-300" />
