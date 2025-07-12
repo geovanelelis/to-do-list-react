@@ -199,20 +199,20 @@ export default function ArchivedTasks() {
                         onClick={() => handleOpenTaskModal(item.id)}
                         className="group/btn md:p-3 md:bg-emerald-500/20 md:hover:bg-emerald-500/30 md:border md:border-emerald-500/30 md:hover:border-emerald-500/50 rounded-xl transition-all duration-300 hover:scale-110"
                       >
-                        <FaEye className="text-emerald-400 md:text-emerald-400 group-hover/btn:text-emerald-300 transition-colors duration-300" />
+                        <FaEye className="size-4.5 text-emerald-400 md:text-emerald-400 group-hover/btn:text-emerald-300 transition-colors duration-300" />
                       </Button>
                       <Button
                         onClick={() => handleUnarchivedBtn(item.id)}
-                        className="group/btn md:p-3 md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border md:border-blue-500/30 md:hover:border-blue-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                        className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
                       >
-                        <MdUnarchive className="text-blue-400 md:text-blue-400 group-hover/btn:text-blue-300 transition-colors duration-300" />
+                        <MdUnarchive className="size-4.5 text-amber-400 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
                       </Button>
 
                       <Button
                         onClick={() => handleRemoveTaskBtn(item.id)}
                         className="group/btn md:p-3 md:bg-red-500/20 md:hover:bg-red-500/30 md:border md:border-red-500/30 md:hover:border-red-500/50 rounded-xl transition-all duration-300 hover:scale-110"
                       >
-                        <FaTrashAlt className="text-red-400 md:text-red-400 group-hover/btn:text-red-300 transition-colors duration-300" />
+                        <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-300 transition-colors duration-300" />
                       </Button>
                     </div>
                   </div>

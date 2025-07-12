@@ -67,7 +67,7 @@ export default function ShowTaskModal({ isOpen, onClose, item }: TaskModalProps)
           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-purple-500/20 rounded-3xl blur-xl"></div>
 
           {/* Conteúdo do Modal */}
-          <div className="relative bg-white/5 backdrop-blur-md md:border border-white/10 md:rounded-3xl p-8 shadow-2xl">
+          <div className="relative bg-white/5 backdrop-blur-md md:border border-white/10 rounded-4xl md:rounded-3xl p-8 shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">
