@@ -96,7 +96,8 @@ export default function Dashboardd() {
   }
 
   const username = session?.user?.name.split(' ')[0] || 'Visitante'
-  const activeTasks = tasks.filter((item) => !item.archived)
+  const activeTasks = tasks.filter((task) => !task.archived)
+  const pendingTasks = tasks.filter((task) => !task.completed && !task.archived)
   const completedTasks = tasks.filter((item) => item.completed && !item.archived)
   const archivedTasks = tasks.filter((item) => item.archived)
 
@@ -125,8 +126,8 @@ export default function Dashboardd() {
           <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-300 text-sm font-medium">Total de Tarefas</p>
-                <p className="text-3xl font-bold">{activeTasks.length}</p>
+                <p className="text-blue-300 text-sm font-medium">Tarefas Pendentes</p>
+                <p className="text-3xl font-bold">{pendingTasks.length}</p>
               </div>
               <div className="p-3 bg-blue-500/20 rounded-xl">
                 <FaTasks className="text-2xl text-blue-400" />

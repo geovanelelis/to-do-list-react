@@ -249,14 +249,14 @@ function SavedTasksContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm border border-orange-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-amber-300 text-sm font-medium">Pendentes</p>
+                <p className="text-orange-400 text-sm font-medium">Pendentes</p>
                 <p className="text-3xl font-bold">{pendingTasks.length}</p>
               </div>
-              <div className="p-3 bg-amber-500/20 rounded-xl">
-                <FaCalendarAlt className="text-2xl text-amber-400" />
+              <div className="p-3 bg-orange-500/20 rounded-xl">
+                <FaCalendarAlt className="text-2xl text-orange-400" />
               </div>
             </div>
           </div>
