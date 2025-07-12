@@ -30,13 +30,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${oxanium.variable} ${montserrat.variable}`}>
-      <body className="bg-gray-950">
+      <body className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 min-h-screen">
         <AuthProvider>
           <Header />
-          {children}
+          <div className="max-md:mt-20">{children}</div>
           <ToastContainer />
         </AuthProvider>
-        <ParticlesComponent />
       </body>
     </html>
   )

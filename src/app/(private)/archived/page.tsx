@@ -5,8 +5,9 @@ import { redirect } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 import Head from 'next/head'
-import { FaTrashAlt } from 'react-icons/fa'
-import { MdArchive, MdUnarchive } from 'react-icons/md'
+import { FaEye, FaTrashAlt } from 'react-icons/fa'
+import { MdUnarchive, MdArchive } from 'react-icons/md'
+import { BsArchive } from 'react-icons/bs'
 
 import { db } from '@/services/firebaseConnection'
 import {
@@ -24,6 +25,7 @@ import {
 import Loading from '@/components/loading'
 import { showAlert, showConfirmationAlert } from '@/components/alert'
 import Button from '@/components/button'
+import ShowTaskModal from '@/components/showtaskmodal'
 
 interface TaskProps {
   id: string
@@ -33,12 +35,15 @@ interface TaskProps {
   completed: boolean
   archived: boolean
   created_at: string
+  archived_at: string
 }
 
 export default function ArchivedTasks() {
   const { data: session, status } = useSession()
 
   const [tasks, setTasks] = useState<TaskProps[]>([])
+  const [isShowTaskModalOpen, setIsShowTaskModalOpen] = useState(false)
+  const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null)
 
   useEffect(() => {
     if (!session?.user?.email) return
@@ -67,7 +72,15 @@ export default function ArchivedTasks() {
     redirect('/')
   }
 
-  async function handleArchivedBtn(taskId: string) {
+  function handleOpenTaskModal(item: string) {
+    const task = tasks.find((task) => task.id === item)
+    if (task) {
+      setSelectedTask(task)
+      setIsShowTaskModalOpen(true)
+    }
+  }
+
+  async function handleUnarchivedBtn(taskId: string) {
     console.log('Tentando buscar a tarefa com ID: ', taskId)
     try {
       const taskRef = doc(db, 'tarefas', taskId)
@@ -75,10 +88,13 @@ export default function ArchivedTasks() {
 
       if (taskSnap.exists()) {
         const currentArchivedState = taskSnap.data().archived
+        const currentCompletedState = taskSnap.data().completed
         console.log('Tarefa encontrada. Estado atual de archived:', !currentArchivedState)
 
         await updateDoc(taskRef, {
           archived: !currentArchivedState,
+          completed: !currentCompletedState,
+          archived_at: !currentArchivedState ? new Date().toISOString() : null,
         })
         currentArchivedState
           ? showAlert('info', 'Tarefa desarquivada!')
@@ -108,70 +124,123 @@ export default function ArchivedTasks() {
     })
   }
 
+  const archivedTasks = tasks.filter((item) => item.archived && item.completed)
+
   return (
-    <div className="max-w-[1240px] mx-auto px-5 py-8 md:py-0">
+    <div className="px-4">
       <Head>
-        <title>Tarefas Arquivadas</title>
+        <title>Tarefas Arquivadas - Painel de Controle</title>
       </Head>
+      <div className="mt-8 relative max-w-7xl mx-auto text-white">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-3 mb-4">
+            <div className="p-3 bg-gradient-to-r from-amber-500 to-orange-500 rounded-xl md:rounded-2xl">
+              <BsArchive className="text-xl md:text-2xl" />
+            </div>
+            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-red-500 bg-clip-text text-transparent">
+              Tarefas Arquivadas
+            </h1>
+          </div>
+          <p className="text-base md:text-xl text-gray-300 font-light">
+            Suas tarefas concluídas e arquivadas para consulta
+          </p>
+        </div>
 
-      <main>
-        <section className="mt-12 flex flex-col max-md:mt-6">
-          <h1 className="text-center font-heading text-4xl font-bold text-gray-200 mb-8">
-            Tarefas Arquivadas
-          </h1>
-          {tasks.filter((item) => item.archived && item.completed).length === 0 ? (
-            <p className="text-center text-gray-400">Nenhuma tarefa arquivada.</p>
-          ) : (
-            tasks.map((item) =>
-              item.archived && item.completed ? (
-                <article
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl px-6 py-8 md:px-8 mb-8 shadow-2xl">
+          <div className="flex items-center gap-3 mb-8">
+            <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
+              <BsArchive className="text-xl text-white" />
+            </div>
+            <h2 className="text-xl md:text-2xl font-bold text-white">Histórico de Tarefas</h2>
+          </div>
+
+          <div className="space-y-4">
+            {archivedTasks.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="p-4 bg-amber-500/10 rounded-full w-fit mx-auto mb-4">
+                  <BsArchive className="text-4xl text-amber-400" />
+                </div>
+                <p className="text-gray-400 text-lg">Nenhuma tarefa arquivada</p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Complete algumas tarefas para vê-las aqui!
+                </p>
+              </div>
+            ) : (
+              archivedTasks.map((item) => (
+                <div
                   key={item.id}
-                  className="mb-3.5 flex rounded-xl p-3.5 flex-col items-start outline-none focus:outline-none border border-b-5 border-primary-950 text-primary-300 bg-gray-950"
+                  className="group relative bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-sm border border-amber-500/30 hover:border-amber-500/50 rounded-2xl p-4 md:p-6 transition-all duration-300 hover:scale-[1.02] hover:from-amber-500/20 hover:to-orange-500/20"
                 >
-                  <div className="flex items-center w-full justify-between">
-                    <div className="flex w-full gap-4">
-                      <div className="flex flex-col w-2/3">
-                        <p className="text-xs font-medium text-primary-500 max-md:text-[10px]">
-                          Descrição
-                        </p>
-                        <p className="whitespace-pre-wrap max-md:text-sm">{item.tarefa}</p>
-                      </div>
+                  <div className="flex items-center justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <span className="text-xs text-amber-300 font-medium uppercase tracking-wide">
+                              Tarefa Arquivada
+                            </span>
+                          </div>
+                          <h3 className="text-sm md:text-lg font-semibold text-amber-200 mb-2">
+                            {item.tarefa.length > 50
+                              ? item.tarefa.slice(0, 50) + '...'
+                              : item.tarefa}
+                          </h3>
 
-                      {item.end_date && 'Invalid Date' && (
-                        <div className="flex flex-col items-end w-1/4">
-                          <p className=" text-xs font-medium text-primary-500 max-md:text-[10px]">
-                            Data-limite
-                          </p>
-                          <p className="max-md:text-xs">
-                            {new Date(item.end_date).toLocaleDateString()}
-                          </p>
+                          <div className="flex items-center gap-2 text-xs md:text-sm text-gray-500 mt-2">
+                            <span className="font-medium">Arquivada em:</span>
+                            <span>{new Date(item.archived_at).toLocaleDateString('pt-BR')}</span>
+                          </div>
                         </div>
-                      )}
+                      </div>
                     </div>
 
-                    <div className="flex items-center gap-4 ml-auto text-gray-300 transition-all duration-300 cursor-pointer max-md:ml-2.5">
-                      {item.completed && (
-                        <Button onClick={() => handleArchivedBtn(item.id)}>
-                          {item.archived ? (
-                            <MdUnarchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
-                          ) : (
-                            <MdArchive className="size-6 hover:text-yellow transition-all duration-300 cursor-pointer max-md:size-4" />
-                          )}
-                        </Button>
-                      )}
-                      <Button onClick={() => handleRemoveTaskBtn(item.id)}>
-                        <FaTrashAlt className="size-5 hover:text-red-500 transition-all duration-300 cursor-pointer max-md:size-4" />
+                    <div className="flex items-center gap-2 ml-4">
+                      <Button
+                        onClick={() => handleOpenTaskModal(item.id)}
+                        className="group/btn md:p-3 md:bg-emerald-500/20 md:hover:bg-emerald-500/30 md:border md:border-emerald-500/30 md:hover:border-emerald-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                      >
+                        <FaEye className="text-emerald-400 md:text-emerald-400 group-hover/btn:text-emerald-300 transition-colors duration-300" />
+                      </Button>
+                      <Button
+                        onClick={() => handleUnarchivedBtn(item.id)}
+                        className="group/btn md:p-3 md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border md:border-blue-500/30 md:hover:border-blue-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                      >
+                        <MdUnarchive className="text-blue-400 md:text-blue-400 group-hover/btn:text-blue-300 transition-colors duration-300" />
+                      </Button>
+
+                      <Button
+                        onClick={() => handleRemoveTaskBtn(item.id)}
+                        className="group/btn md:p-3 md:bg-red-500/20 md:hover:bg-red-500/30 md:border md:border-red-500/30 md:hover:border-red-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                      >
+                        <FaTrashAlt className="text-red-400 md:text-red-400 group-hover/btn:text-red-300 transition-colors duration-300" />
                       </Button>
                     </div>
                   </div>
-                </article>
-              ) : (
-                ''
-              )
-            )
+
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-md transform scale-x-0 group-hover:scale-x-90 transition-transform duration-300"></div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {archivedTasks.length > 0 && (
+            <div className="mt-8 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
+              <div className="flex items-center gap-2 text-amber-300">
+                <MdArchive className="text-lg" />
+                <p className="text-sm">
+                  <span className="font-medium">Dica:</span> Use o botão de desarquivar para
+                  restaurar tarefas ao painel principal.
+                </p>
+              </div>
+            </div>
           )}
-        </section>
-      </main>
+        </div>
+      </div>
+      <ShowTaskModal
+        isOpen={isShowTaskModalOpen}
+        onClose={() => setIsShowTaskModalOpen(false)}
+        item={selectedTask}
+      />
     </div>
   )
 }

@@ -3,51 +3,135 @@
 @theme {
   --color-*: initial;
 
-  --color-primary-300: #00ddea;
-  --color-primary-500: #00afc4;
-  --color-primary-700: #0090a3;
-  --color-primary-900: #0e5b6b;
-  --color-primary-950: #023d4a;
+  /* Primary Colors - Expanded palette */
+  --color-primary-50: #e9f6fc;
+  --color-primary-100: #d2eafb;
+  --color-primary-200: #a6d6f4;
+  --color-primary-300: #7cc2ec;
+  --color-primary-400: #55afdd;
+  --color-primary-500: #2f9bd1;
+  --color-primary-600: #188ac1;
+  --color-primary-700: #0068a7;
+  --color-primary-800: #0a5884;
+  --color-primary-900: #004a70;
+  --color-primary-950: #0a2e47;
 
-  --color-red-500: #f24052;
-  --color-red-700: #87142f;
-  --color-red-800: #731128;
+  /* Purple Gradient Colors - Para gradientes modernos */
+  --color-purple-300: #d9b4fe;
+  --color-purple-400: #c084fc;
+  --color-purple-500: #a855f7;
+  --color-purple-600: #9333ea;
+  --color-purple-700: #7c3aed;
+  --color-purple-900: #581c87;
 
-  --color-green-500: #00e8b7;
-  --color-green-700: #00987e;
+  /* Pink Colors - Para gradientes complementares */
+  --color-pink-400: #f472b6;
+  --color-pink-500: #ec4899;
+  --color-pink-600: #db2777;
 
-  --color-yellow: #d3c845;
+  /* Blue Colors - Para cards de estatísticas */
+  --color-blue-300: #93c5fd;
+  --color-blue-400: #60a5fa;
+  --color-blue-500: #3b82f6;
+  --color-blue-600: #2563eb;
 
-  --color-gray-50: #f7f7f8;
-  --color-gray-100: #ededf1;
-  --color-gray-200: #d8d9df;
-  --color-gray-300: #b5b6c4;
-  --color-gray-400: #606171;
-  --color-gray-500: #444550;
-  --color-gray-600: #2e2e39;
-  --color-gray-700: #23232b;
-  --color-gray-800: #1c1c22;
-  --color-gray-900: #14141a;
-  --color-gray-950: #0f0f14;
+  /* Indigo Colors - Para elementos de destaque */
+  --color-indigo-500: #6366f1;
+  --color-indigo-600: #4f46e5;
+  --color-indigo-700: #4338ca;
+  --color-indigo-800: #3730a3;
+  --color-indigo-900: #312e81;
 
+  /* Status Colors */
+  --color-green-300: #5ee793;
+  --color-green-400: #33f573;
+  --color-green-500: #09de4f;
+  --color-green-600: #00cc44;
+  --color-green-700: #049134;
+
+  --color-emerald-300: #6ee7bb;
+  --color-emerald-400: #34d399;
+  --color-emerald-500: #10b981;
+  --color-emerald-600: #059669;
+
+  --color-amber-300: #ffd34a;
+  --color-amber-400: #ffbf24;
+  --color-amber-500: #f59e0b;
+  --color-amber-600: #d97706;
+
+  --color-orange-500: #f97316;
+  --color-orange-600: #ea580c;
+
+  --color-yellow-400: #facc15;
+  --color-yellow-500: #eab308;
+
+  --color-red-300: #ef7a7a;
+  --color-red-400: #e44f4f;
+  --color-red-500: #d03232;
+  --color-red-600: #af2626;
+  --color-red-700: #912323;
+
+  /* Grayscale - Sistema de cores cinza refinado */
+  --color-white: #ffffff;
+
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
+  --color-gray-950: #0e121a;
+
+  /* Slate - Para elementos de fundo e cards */
+  --color-slate-600: #475569;
+  --color-slate-700: #334155;
+  --color-slate-800: #1e293b;
+  --color-slate-900: #0f172a;
+
+  /* Tipografia */
   --font-heading: var(--font-oxanium);
   --font-sans: var(--font-montserrat);
 
-  --radius-xl: 0.5rem;
+  /* Bordas e Raios */
+  --radius-lg: 0.5rem;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --radius-3xl: 1.5rem;
+
+  /* Sombras customizadas */
+  --shadow-glass: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  --shadow-card: 0 10px 25px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-elevated: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
 }
 
+/* Base button styles */
 .button {
-  background-color: none;
+  background-color: transparent;
   padding: 10px 32px;
   border: solid 1.5px var(--color-gray-300);
   border-radius: var(--radius-xl);
   cursor: pointer;
-  transition: all 0.3s;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .button:hover {
   color: var(--color-gray-900);
   background-color: var(--color-gray-100);
+  border-color: var(--color-gray-400);
+  transform: translateY(-1px);
+}
+
+.button:active {
+  transform: translateY(0);
 }
 
 .height-home {
@@ -59,4 +143,28 @@
     height: auto;
     min-height: calc(80vh - 60px);
   }
+
+  .button {
+    padding: 8px 24px;
+    font-size: 0.875rem;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-900);
+  border-radius: var(--radius-lg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--color-primary-700), var(--color-indigo-900));
+  border-radius: var(--radius-lg);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, var(--color-primary-700), var(--color-indigo-800));
 }

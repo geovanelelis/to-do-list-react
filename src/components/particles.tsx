@@ -92,7 +92,7 @@ export const ParticlesComponent = () => {
         id="tsparticles"
         particlesLoaded={particlesLoaded}
         options={options}
-        className="absolute -z-1"
+        className="fixed top-0 left-0 w-full h-full -z-10"
       />
     )
   }

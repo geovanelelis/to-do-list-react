@@ -6,7 +6,16 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Suspense, useEffect, useState } from 'react'
-import { FaGoogle, FaGithub } from 'react-icons/fa'
+import {
+  FaGoogle,
+  FaGithub,
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaUserPlus,
+  FaSignInAlt,
+} from 'react-icons/fa'
+import { BsStars } from 'react-icons/bs'
 import {
   createUserWithEmailAndPassword,
   updateProfile,
@@ -22,6 +31,7 @@ function AuthContent() {
   const searchParams = useSearchParams()
 
   const [mode, setMode] = useState('login')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     setMode(searchParams.get('mode') || 'login')
@@ -34,9 +44,11 @@ function AuthContent() {
 
   async function handleRegister(event: React.FormEvent) {
     event.preventDefault()
+    setIsLoading(true)
 
     if (!firstName || !lastName || !email || !password) {
       showAlert('error', 'Preencha todos os campos.')
+      setIsLoading(false)
       return
     }
 
@@ -73,13 +85,17 @@ function AuthContent() {
       setLastName('')
       setEmail('')
       setPassword('')
+      setIsLoading(false)
     }
   }
 
   async function handleLogin(event: React.FormEvent) {
     event.preventDefault()
+    setIsLoading(true)
+
     if (!email || !password) {
       showAlert('error', 'Preencha todos os campos.')
+      setIsLoading(false)
       return
     }
     try {
@@ -102,132 +118,191 @@ function AuthContent() {
     } finally {
       setEmail('')
       setPassword('')
+      setIsLoading(false)
     }
   }
 
   return (
-    <div>
+    <div className="px-4 py-8">
       <Head>
-        <title>Tarefinhas</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+        <title>Tarefinhas - {mode === 'login' ? 'Entrar' : 'Criar Conta'}</title>
       </Head>
 
-      <main className="w-full mx-auto">
-        <div className="min-h-[100dvh] flex items-center justify-center xl:justify-evenly max-xl:flex-col gap-8 overflow-hidden px-4 py-4 sm:py-0 xl:px-8">
-          <div className="flex flex-col items-center gap-6 ">
-            <div className="flex gap-3 xl:gap-6 w-full items-center justify-center">
-              <Image
-                src="/logocompleta.png"
-                alt="Logo Tarefinhas"
-                width={'680'}
-                height={'680'}
-                className="w-[520px] xl:w-[680px]"
-              />
+      <main>
+        <div className="w-full min-h-screen flex items-center justify-center xl:justify-evenly max-xl:flex-col gap-8 xl:gap-12">
+          {/* Logo */}
+          <div className="flex flex-col items-center gap-6 max-w-2xl">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-indigo-600/10 rounded-3xl blur-3xl"></div>
+              <div className="relative bg-gray-600/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 shadow-2xl">
+                <Image
+                  src="/logocompleta.png"
+                  alt="Logo Tarefinhas"
+                  width={600}
+                  height={600}
+                  className="w-full max-w-[480px] xl:max-w-[600px] h-auto"
+                />
+              </div>
             </div>
-            <h1 className="hidden sm:flex text-gray-300 w-full font-sans leading-6 items-center justify-center text-center font-medium text-base xl:text-xl">
-              O MELHOR SISTEMA PARA ORGANIZAR SUAS TAREFAS
-            </h1>
+            <div className="text-center">
+              <h1 className="text-2xl xl:text-3xl font-bold bg-gradient-to-r from-primary-400 via-primary-500 to-indigo-600 bg-clip-text text-transparent">
+                O MELHOR SISTEMA PARA
+              </h1>
+              <h2 className="text-xl xl:text-2xl font-bold bg-gradient-to-r from-indigo-500 to-primary-400 bg-clip-text text-transparent">
+                ORGANIZAR SUAS TAREFAS
+              </h2>
+            </div>
           </div>
 
-          <div className="backdrop-blur-xs bg-gray-900/0 w-full max-w-[540px] rounded-2xl text-gray-100 border border-gray-700/70 p-6 sm:p-10 flex items-center justify-center flex-col gap-6">
-            <span className="text-center">
-              <h1 className="text-3xl sm:text-4xl text-gray-200 font-black mb-1">
-                {mode === 'login' ? 'Login' : 'Crie sua conta'}
-              </h1>
-              <p className="">{mode === 'login' ? 'Entre com sua conta.' : 'É rápido e fácil.'}</p>
-            </span>
+          {/* Formulário de Autenticação */}
+          <div className="w-full max-w-lg">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-blue-600/10 rounded-3xl blur-xl"></div>
+              <div className="relative bg-gray-600/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl">
+                {/* Header */}
+                <div className="text-center mb-8">
+                  <div className="inline-flex items-center gap-3 mb-4">
+                    <div className="p-3 bg-gradient-to-r from-primary-500 to-indigo-600 rounded-xl">
+                      <BsStars className="text-xl text-white" />
+                    </div>
+                    <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-400 to-indigo-500 bg-clip-text text-transparent">
+                      {mode === 'login' ? 'Bem-vindo(a)!' : 'Crie sua conta'}
+                    </h1>
+                  </div>
+                  <p className="text-gray-300 font-light">
+                    {mode === 'login'
+                      ? 'Entre com sua conta e organize suas tarefas.'
+                      : 'É rápido e fácil. Comece agora!'}
+                  </p>
+                </div>
 
-            <form
-              action={''}
-              className="flex flex-col gap-2.5 w-full"
-              onSubmit={mode === 'login' ? handleLogin : handleRegister}
-            >
-              {mode !== 'login' && (
-                <>
-                  <span className="flex gap-2.5 w-full max-sm:flex-col">
+                {/* Formulário */}
+                <form
+                  className="space-y-4 mb-6"
+                  onSubmit={mode === 'login' ? handleLogin : handleRegister}
+                >
+                  {mode !== 'login' && (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FaUser className="text-gray-400 text-sm" />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Nome"
+                          className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-300"
+                          value={firstName}
+                          onChange={(e) => setFirstName(e.target.value)}
+                        />
+                      </div>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <FaUser className="text-gray-400 text-sm" />
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Sobrenome"
+                          className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-300"
+                          value={lastName}
+                          onChange={(e) => setLastName(e.target.value)}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaEnvelope className="text-gray-400 text-sm" />
+                    </div>
                     <input
-                      type="text"
-                      placeholder="Nome"
-                      className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
+                      type="email"
+                      placeholder="Email"
+                      className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-300"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
+                  </div>
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <FaLock className="text-gray-400 text-sm" />
+                    </div>
                     <input
-                      type="text"
-                      placeholder="Sobrenome"
-                      className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
+                      type="password"
+                      placeholder="Senha"
+                      className="w-full pl-10 pr-4 py-3 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all duration-300"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
-                  </span>
-                </>
-              )}
-              <input
-                type="email"
-                placeholder="Email"
-                className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <input
-                type="password"
-                placeholder="Senha"
-                className="text-sm bg-gray-800/40 rounded-xl px-3 py-3 w-full focus:outline-none focus:ring focus:ring-primary-700/50"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <Button
-                type="submit"
-                className="bg-primary-700 py-2 mt-4 hover:bg-primary-500 rounded-xl"
-              >
-                {mode === 'login' ? 'Entrar' : 'Cradastrar'}
-              </Button>
-            </form>
+                  </div>
 
-            <p className="text-sm">
-              {mode === 'login' ? (
-                <>
-                  Não tem uma conta?{' '}
                   <Button
-                    onClick={() => router.push('/auth?mode=register')}
-                    className="text-primary-500 hover:text-primary-300 transition-colors duration-300 cursor-pointer"
+                    type="submit"
+                    disabled={isLoading}
+                    className="w-full bg-gradient-to-r from-primary-500 to-indigo-600 hover:from-primary-600 hover:to-indigo-600 text-white py-3 px-6 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Criar conta
+                    {isLoading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    ) : (
+                      <>
+                        {mode === 'login' ? <FaSignInAlt /> : <FaUserPlus />}
+                        {mode === 'login' ? 'Entrar' : 'Cadastrar'}
+                      </>
+                    )}
                   </Button>
-                </>
-              ) : (
-                <>
-                  Já tem uma conta?{' '}
+                </form>
+
+                {/* Toogle para login/cadastro */}
+                <div className="text-center mb-6">
+                  <p className="text-gray-300 text-sm">
+                    {mode === 'login' ? (
+                      <>
+                        Não tem uma conta?{' '}
+                        <button
+                          onClick={() => router.push('/auth?mode=register')}
+                          className="text-primary-400 hover:text-primary-300 transition-colors duration-300 cursor-pointer font-medium"
+                        >
+                          Criar conta
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        Já tem uma conta?{' '}
+                        <button
+                          onClick={() => router.push('/auth?mode=login')}
+                          className="text-primary-400 hover:text-primary-300 transition-colors duration-300 cursor-pointer font-medium"
+                        >
+                          Entrar
+                        </button>
+                      </>
+                    )}
+                  </p>
+                </div>
+
+                <div className="flex items-center justify-center gap-4 mb-6">
+                  <hr className="flex-1 border-white/20" />
+                  <p className="text-gray-400 text-sm">ou</p>
+                  <hr className="flex-1 border-white/20" />
+                </div>
+
+                {/* Login Social */}
+                <div className="flex items-center justify-center gap-4 w-full">
                   <Button
-                    onClick={() => router.push('/auth?mode=login')}
-                    className="text-primary-500 hover:text-primary-300 transition-colors duration-300 cursor-pointer"
+                    onClick={() => signIn('google')}
+                    className="group flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
                   >
-                    Entrar
+                    <FaGoogle className="text-lg text-red-400 group-hover:text-red-300 transition-colors duration-300" />
+                    <span className="text-white font-medium">Google</span>
                   </Button>
-                </>
-              )}
-            </p>
-
-            <div className="flex items-center justify-center gap-4 w-full">
-              <hr className="text-gray-600 w-full" />
-              <p>ou</p>
-              <hr className="text-gray-600 w-full" />
-            </div>
-
-            <div className="flex items-center justify-center gap-6 w-full">
-              <Button
-                onClick={() => signIn('google')}
-                className="px-3.5 py-3.5 bg-gray-700/50 rounded-full hover:bg-gray-800/50"
-              >
-                <FaGoogle className="size-6 text-primary-500 hover:text-primary-700 transition-colors duration-300" />
-              </Button>
-              <Button
-                onClick={() => signIn('github')}
-                className="px-3.5 py-3.5 bg-gray-700/50 rounded-full hover:bg-gray-800/50"
-              >
-                {' '}
-                <FaGithub className="size-6 text-primary-500 hover:text-primary-700 transition-colors duration-300" />
-              </Button>
+                  <Button
+                    onClick={() => signIn('github')}
+                    className="group flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                  >
+                    <FaGithub className="text-lg text-gray-300 group-hover:text-white transition-colors duration-300" />
+                    <span className="text-white font-medium">GitHub</span>
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
