@@ -28,7 +28,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${oxanium.variable} ${montserrat.variable}`}>
-      <body className="bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950 min-h-screen overflow-hidden">
+      <body className="bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950">
         <AuthProvider>
           {children}
           <ToastContainer />

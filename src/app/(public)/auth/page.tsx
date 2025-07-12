@@ -123,18 +123,18 @@ function AuthContent() {
   }
 
   return (
-    <div className="px-4 py-8">
+    <div className="min-h-dvh flex flex-col">
       <Head>
         <title>Tarefinhas - {mode === 'login' ? 'Entrar' : 'Criar Conta'}</title>
       </Head>
 
-      <main>
-        <div className="w-full min-h-screen flex items-center justify-center xl:justify-evenly max-xl:flex-col gap-8 xl:gap-12">
+      <main className="flex-1 flex items-center justify-center p-4 py-8 sm:py-12">
+        <div className="w-full flex items-center justify-center xl:justify-evenly max-xl:flex-col gap-6 md:gap-8 xl:gap-12">
           {/* Logo */}
-          <div className="flex flex-col items-center gap-6 max-w-2xl">
+          <div className="flex flex-col items-center gap-4 md:gap-6 max-w-2xl">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-indigo-600/10 rounded-3xl blur-3xl"></div>
-              <div className="relative bg-gray-600/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 shadow-2xl">
+              <div className="relative bg-gray-600/5 backdrop-blur-sm border border-white/10 rounded-3xl p-6 md:p-8 shadow-2xl">
                 <Image
                   src="/logocompleta.png"
                   alt="Logo Tarefinhas"
@@ -145,31 +145,31 @@ function AuthContent() {
               </div>
             </div>
             <div className="text-center">
-              <h1 className="text-2xl xl:text-3xl font-bold bg-gradient-to-r from-primary-400 via-primary-500 to-indigo-600 bg-clip-text text-transparent">
+              <h1 className="text-xl md:text-2xl xl:text-3xl font-bold bg-gradient-to-r from-primary-400 via-primary-500 to-indigo-600 bg-clip-text text-transparent">
                 O MELHOR SISTEMA PARA
               </h1>
-              <h2 className="text-xl xl:text-2xl font-bold bg-gradient-to-r from-indigo-500 to-primary-400 bg-clip-text text-transparent">
+              <h2 className="text-lg md:text-xl xl:text-2xl font-bold bg-gradient-to-r from-indigo-500 to-primary-400 bg-clip-text text-transparent">
                 ORGANIZAR SUAS TAREFAS
               </h2>
             </div>
           </div>
 
           {/* Formulário de Autenticação */}
-          <div className="w-full max-w-lg">
+          <div className="w-full max-w-lg flex-shrink-0">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-blue-600/10 rounded-3xl blur-xl"></div>
-              <div className="relative bg-gray-600/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-2xl">
+              <div className="relative bg-gray-600/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl">
                 {/* Header */}
-                <div className="text-center mb-8">
+                <div className="text-center mb-6 sm:mb-8">
                   <div className="inline-flex items-center gap-3 mb-4">
-                    <div className="p-3 bg-gradient-to-r from-primary-500 to-indigo-600 rounded-xl">
-                      <BsStars className="text-xl text-white" />
+                    <div className="p-2 sm:p-3 bg-gradient-to-r from-primary-500 to-indigo-600 rounded-xl">
+                      <BsStars className="text-lg sm:text-xl text-white" />
                     </div>
-                    <h1 className="text-3xl font-bold bg-gradient-to-r from-primary-400 to-indigo-500 bg-clip-text text-transparent">
+                    <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-primary-400 to-indigo-500 bg-clip-text text-transparent">
                       {mode === 'login' ? 'Bem-vindo(a)!' : 'Crie sua conta'}
                     </h1>
                   </div>
-                  <p className="text-gray-300 font-light">
+                  <p className="text-gray-300 font-light text-sm sm:text-base">
                     {mode === 'login'
                       ? 'Entre com sua conta e organize suas tarefas.'
                       : 'É rápido e fácil. Comece agora!'}
@@ -286,17 +286,17 @@ function AuthContent() {
                 </div>
 
                 {/* Login Social */}
-                <div className="flex items-center justify-center gap-4 w-full">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 w-full">
                   <Button
                     onClick={() => signIn('google')}
-                    className="group flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                    className="group w-full sm:flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
                   >
                     <FaGoogle className="text-lg text-red-400 group-hover:text-red-300 transition-colors duration-300" />
                     <span className="text-white font-medium">Google</span>
                   </Button>
                   <Button
                     onClick={() => signIn('github')}
-                    className="group flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
+                    className="group w-full sm:flex-1 bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl py-3 px-4 hover:bg-white/10 hover:border-white/20 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
                   >
                     <FaGithub className="text-lg text-gray-300 group-hover:text-white transition-colors duration-300" />
                     <span className="text-white font-medium">GitHub</span>
