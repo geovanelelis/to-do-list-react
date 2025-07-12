@@ -359,8 +359,8 @@ function SavedTasksContent() {
                       <div
                         className={`flex max-md:flex-col items-center gap-3 transition-all duration-400 ${
                           showActionsMobile === item.id
-                            ? 'max-h-40 opacity-100 mt-3'
-                            : 'max-h-0 opacity-0'
+                            ? 'max-h-40 block mt-3'
+                            : 'max-h-0 hidden'
                         } md:flex md:flex-row md:opacity-100`}
                       >
                         {!item.completed && (
