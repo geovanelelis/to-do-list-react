@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation'
 import { useState, useEffect } from 'react'
 
 import Head from 'next/head'
-import { FaEye, FaTrashAlt } from 'react-icons/fa'
+import { FaAngleDown, FaAngleUp, FaTasks, FaTrashAlt } from 'react-icons/fa'
 import { MdUnarchive, MdArchive } from 'react-icons/md'
 import { BsArchive } from 'react-icons/bs'
 
@@ -44,6 +44,7 @@ export default function ArchivedTasks() {
   const [tasks, setTasks] = useState<TaskProps[]>([])
   const [isShowTaskModalOpen, setIsShowTaskModalOpen] = useState(false)
   const [selectedTask, setSelectedTask] = useState<TaskProps | null>(null)
+  const [showActionsMobile, setShowActionsMobile] = useState<string | null>(null)
 
   useEffect(() => {
     if (!session?.user?.email) return
@@ -149,7 +150,7 @@ export default function ArchivedTasks() {
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl px-6 py-8 md:px-8 mb-8 shadow-2xl">
           <div className="flex items-center gap-3 mb-8">
             <div className="p-2 bg-gradient-to-r from-amber-500 to-orange-500 rounded-lg">
-              <BsArchive className="text-xl text-white" />
+              <FaTasks className="text-xl text-white" />
             </div>
             <h2 className="text-xl md:text-2xl font-bold text-white">Histórico de Tarefas</h2>
           </div>
@@ -169,7 +170,8 @@ export default function ArchivedTasks() {
               archivedTasks.map((item) => (
                 <div
                   key={item.id}
-                  className="group relative bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-sm border border-amber-500/30 hover:border-amber-500/50 rounded-2xl p-4 md:p-6 transition-all duration-300 hover:scale-[1.02] hover:from-amber-500/20 hover:to-orange-500/20"
+                  className="group relative bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-sm border border-amber-500/30 hover:border-amber-500/50 rounded-2xl p-4 md:p-6 cursor-pointer transition-all duration-300 hover:scale-[1.02] hover:from-amber-500/20 hover:to-orange-500/20"
+                  onClick={() => handleOpenTaskModal(item.id)}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1 min-w-0">
@@ -194,26 +196,53 @@ export default function ArchivedTasks() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2 ml-4">
-                      <Button
-                        onClick={() => handleOpenTaskModal(item.id)}
-                        className="group/btn md:p-3 md:bg-emerald-500/20 md:hover:bg-emerald-500/30 md:border md:border-emerald-500/30 md:hover:border-emerald-500/50 rounded-xl transition-all duration-300 hover:scale-110"
-                      >
-                        <FaEye className="size-4.5 text-emerald-400 md:text-emerald-400 group-hover/btn:text-emerald-300 transition-colors duration-300" />
-                      </Button>
-                      <Button
-                        onClick={() => handleUnarchivedBtn(item.id)}
-                        className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
-                      >
-                        <MdUnarchive className="size-4.5 text-amber-400 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
-                      </Button>
+                    {/* Botões de Ação */}
+                    <div className="flex max-md:flex-col items-center md:gap-2 ml-4 max-md:bg-gray-900/30 p-2.5 rounded-xl transition-all duration-400">
+                      {showActionsMobile === item.id ? (
+                        <FaAngleUp
+                          className="size-5 text-gray-400 flex md:hidden cursor-pointer"
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            setShowActionsMobile(showActionsMobile === item.id ? null : item.id)
+                          }}
+                        />
+                      ) : (
+                        <FaAngleDown
+                          className="size-5 text-gray-400 flex md:hidden cursor-pointer"
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            setShowActionsMobile(showActionsMobile === item.id ? null : item.id)
+                          }}
+                        />
+                      )}
 
-                      <Button
-                        onClick={() => handleRemoveTaskBtn(item.id)}
-                        className="group/btn md:p-3 md:bg-red-500/20 md:hover:bg-red-500/30 md:border md:border-red-500/30 md:hover:border-red-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                      <div
+                        className={`flex max-md:flex-col items-center gap-3 transition-all duration-400 ${
+                          showActionsMobile === item.id ? 'max-h-40 block mt-3' : 'max-h-0 hidden'
+                        } md:flex md:flex-row md:opacity-100`}
                       >
-                        <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-300 transition-colors duration-300" />
-                      </Button>
+                        {item.completed && (
+                          <Button
+                            onClick={(event) => {
+                              event.stopPropagation()
+                              handleUnarchivedBtn(item.id)
+                            }}
+                            className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                          >
+                            <MdUnarchive className="size-4 text-amber-300 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
+                          </Button>
+                        )}
+
+                        <Button
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            handleRemoveTaskBtn(item.id)
+                          }}
+                          className="group/btn md:p-3 md:bg-red-400/20 md:hover:bg-red-400/30 md:border md:border-red-400/30 md:hover:border-red-400/50 rounded-xl transition-all duration-300 hover:scale-110"
+                        >
+                          <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-400 md:group-hover/btn:text-red-300 transition-colors duration-300" />
+                        </Button>
+                      </div>
                     </div>
                   </div>
 
@@ -226,7 +255,7 @@ export default function ArchivedTasks() {
           {archivedTasks.length > 0 && (
             <div className="mt-8 p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl">
               <div className="flex items-center gap-2 text-amber-300">
-                <MdArchive className="text-lg" />
+                <MdUnarchive className="size-5 w-10 sm:w-fit" />
                 <p className="text-sm">
                   <span className="font-medium">Dica:</span> Use o botão de desarquivar para
                   restaurar tarefas ao painel principal.

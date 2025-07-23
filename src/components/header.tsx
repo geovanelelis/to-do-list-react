@@ -66,7 +66,7 @@ export function Header() {
                   value={search}
                   onChange={(e) => {
                     setSearch(e.target.value)
-                    router.push(`/savedtasks?search=${encodeURIComponent(e.target.value)}`)
+                    router.push(`/tasksearch?search=${encodeURIComponent(e.target.value)}`)
                   }}
                   className="border border-white/10 placeholder-gray-400 text-sm rounded-xl py-1.5 pl-10 outline-none w-full focus:bg-gray-950/30 transition-all duration-300"
                 />

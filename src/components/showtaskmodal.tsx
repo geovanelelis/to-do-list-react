@@ -62,12 +62,12 @@ export default function ShowTaskModal({ isOpen, onClose, item }: TaskModalProps)
       className="fixed inset-0 flex items-center justify-center z-50 bg-gray-950/80 backdrop-blur-sm px-4 py-8"
       onClick={handleBackdropClick}
     >
-      <div className="w-full max-w-2xl max-h-[90vh] overflow-y-auto transform transition-all duration-300 ease-out rounded-4xl md:rounded-3xl">
+      <div className="w-full max-w-2xl max-h-[80vh] overflow-y-auto transform transition-all duration-300 ease-out rounded-tl-2xl rounded-bl-2xl md:rounded-3xl">
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-primary-500/20 to-purple-500/20 rounded-3xl blur-xl"></div>
 
           {/* Conteúdo do Modal */}
-          <div className="relative bg-white/5 backdrop-blur-md md:border border-white/10 rounded-4xl md:rounded-3xl p-8 shadow-2xl">
+          <div className="relative bg-white/5 backdrop-blur-md md:border border-white/10 rounded-tl-2xl rounded-bl-2xl md:rounded-3xl p-8 shadow-2xl">
             {/* Header */}
             <div className="flex items-center justify-between mb-8">
               <div className="flex items-center gap-3">

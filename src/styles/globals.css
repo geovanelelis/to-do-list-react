@@ -160,7 +160,7 @@
 
 ::-webkit-scrollbar-track {
   background: var(--color-gray-900);
-  border-radius: var(--radius-lg);
+  /* border-radius: var(--radius-lg); */
 }
 
 ::-webkit-scrollbar-thumb {

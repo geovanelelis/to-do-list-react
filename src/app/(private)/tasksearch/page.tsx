@@ -10,11 +10,10 @@ import {
   FaCheck,
   FaPen,
   FaUndo,
-  FaPlus,
   FaTasks,
   FaCalendarAlt,
-  FaTable,
   FaAngleDown,
+  FaSearch,
 } from 'react-icons/fa'
 import { MdArchive } from 'react-icons/md'
 
@@ -98,11 +97,6 @@ function SavedTasksContent() {
 
   if (!session) {
     redirect('/')
-  }
-
-  function openTaskModal() {
-    setTaskToEdit(null)
-    setIsModalOpen(true)
   }
 
   function openShowTaskModal(id: string) {
@@ -199,8 +193,6 @@ function SavedTasksContent() {
   }
 
   const activeTasks = tasks.filter((item) => !item.archived)
-  const completedTasks = tasks.filter((item) => item.completed && !item.archived)
-  const pendingTasks = tasks.filter((item) => !item.completed && !item.archived)
 
   return (
     <div className="px-4">
@@ -210,85 +202,37 @@ function SavedTasksContent() {
 
       <div className="mt-8 relative max-w-7xl mx-auto text-white">
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-3 mb-4">
+          <div className="inline-flex items-center gap-3">
             <div className="p-3 bg-gradient-to-r from-primary-500 to-primary-600 rounded-xl md:rounded-2xl">
-              <FaTable className="text-xl md:text-2xl" />
+              <FaSearch className="text-lg md:text-xl" />
             </div>
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent">
-              Minhas Tarefas
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-primary-400 via-primary-500 to-primary-600 bg-clip-text text-transparent">
+              Resultado da Pesquisa
             </h1>
-          </div>
-          <p className=" text-base md:text-xl text-gray-300 font-light">
-            Gerencie todas as suas tarefas em um só lugar
-          </p>
-        </div>
-
-        {/* Cards de Estatísticas */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-blue-300 text-sm font-medium">Tarefas Ativas</p>
-                <p className="text-3xl font-bold">{activeTasks.length}</p>
-              </div>
-              <div className="p-3 bg-blue-500/20 rounded-xl">
-                <FaTasks className="text-2xl text-blue-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-green-300 text-sm font-medium">Concluídas</p>
-                <p className="text-3xl font-bold">{completedTasks.length}</p>
-              </div>
-              <div className="p-3 bg-green-500/20 rounded-xl">
-                <FaCheck className="text-2xl text-green-400" />
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm border border-orange-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-orange-400 text-sm font-medium">Pendentes</p>
-                <p className="text-3xl font-bold">{pendingTasks.length}</p>
-              </div>
-              <div className="p-3 bg-orange-500/20 rounded-xl">
-                <FaCalendarAlt className="text-2xl text-orange-400" />
-              </div>
-            </div>
           </div>
         </div>
 
         {/* Container principal das tarefas */}
         <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl px-6 py-8 md:px-8 mb-8 shadow-2xl transition-all duration-300">
-          <div className="flex gap-2 items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-lg">
-                <FaTasks className="text-xl text-white" />
-              </div>
-              <h2 className="text-xl md:text-2xl font-bold text-white">Todas as Tarefas</h2>
-            </div>
-            <Button
-              className="group flex items-center gap-3 bg-gradient-to-r from-primary-500 to-indigo-500 hover:from-primary-600 hover:to-indigo-600 text-white md:px-6 px-5 py-3 rounded-xl md:rounded-2xl font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-              onClick={openTaskModal}
-            >
-              <FaPlus className="text-sm group-hover:rotate-90 transition-transform duration-300" />
-              <p className="md:block hidden text-base">Criar Nova</p>
-            </Button>
-          </div>
-
           {/* Lista de Tarefas */}
           <div className="space-y-4">
-            {activeTasks.length === 0 ? (
+            {searchQuery === '' ? (
               <div className="text-center py-16">
                 <div className="p-4 bg-gray-500/10 rounded-full w-fit mx-auto mb-4">
                   <FaTasks className="text-4xl text-gray-400" />
                 </div>
                 <p className="text-gray-400 text-lg">Nenhuma tarefa encontrada</p>
-                <p className="text-gray-500 text-sm mt-2">Crie sua primeira tarefa para começar!</p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Pesquise uma tarefa para que ela apareça aqui!
+                </p>
+              </div>
+            ) : activeTasks.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="p-4 bg-gray-500/10 rounded-full w-fit mx-auto mb-4">
+                  <FaTasks className="text-4xl text-gray-400" />
+                </div>
+                <p className="text-gray-400 text-lg">Nenhuma tarefa corresponde à sua pesquisa</p>
+                <p className="text-gray-500 text-sm mt-2">Tente pesquisar por outro termo!</p>
               </div>
             ) : (
               activeTasks.map((item) => (
@@ -421,18 +365,6 @@ function SavedTasksContent() {
               ))
             )}
           </div>
-
-          {activeTasks.length > 0 && (
-            <div className="mt-8 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl">
-              <div className="flex items-center gap-2 text-emerald-300">
-                <MdArchive className="size-5 w-10 sm:w-fit" />
-                <p className="text-sm">
-                  <span className="font-medium">Dica:</span> Para arquivar uma tarefa, marque-a como
-                  concluída.
-                </p>
-              </div>
-            </div>
-          )}
         </div>
       </div>
 
