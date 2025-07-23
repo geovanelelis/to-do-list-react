@@ -2,26 +2,17 @@
 
 import React from 'react'
 
-export interface ButtonProps {
-  children?: React.ReactNode
-  className?: string
-  type?: 'button' | 'submit'
-  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
-  disabled?: boolean
-}
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
 
-export default function Button(props: ButtonProps) {
+export default function Button({ className, children, ...rest }: ButtonProps) {
   return (
     <button
-      type={props.type || 'button'}
-      className={
-        'font-sans transition-all duration-300 cursor-pointer text-sm' +
-        (props.className ? ` ${props.className}` : '')
-      }
-      onClick={props.onClick}
-      disabled={props.disabled}
+      className={`font-sans transition-all duration-300 cursor-pointer text-sm${
+        className ? ` ${className}` : ''
+      }`}
+      {...rest}
     >
-      {props.children}
+      {children}
     </button>
   )
 }

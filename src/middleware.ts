@@ -12,7 +12,7 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/', req.url))
   }
 
-  const privateRoutes = ['/dashboard', '/archived', '/savedtasks']
+  const privateRoutes = ['/dashboard', '/archived', '/savedtasks', '/tasksearch']
 
   if (!isAuthenticated && privateRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL('/auth', req.url))
@@ -26,5 +26,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/auth', '/dashboard', '/archived', '/savedtasks'],
+  matcher: ['/', '/auth', '/dashboard', '/archived', '/savedtasks', '/tasksearch'],
 }

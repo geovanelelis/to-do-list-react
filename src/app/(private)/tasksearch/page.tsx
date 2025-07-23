@@ -38,6 +38,7 @@ import Button from '@/components/button'
 import TaskModal from '@/components/createtaskmodal'
 import { FaAngleUp } from 'react-icons/fa6'
 import ShowTaskModal from '@/components/showtaskmodal'
+import { Tooltip } from 'react-tooltip'
 
 interface TaskProps {
   id: string
@@ -306,56 +307,86 @@ function SavedTasksContent() {
                         } md:flex md:flex-row md:opacity-100`}
                       >
                         {!item.completed && (
+                          <div className="tooltipstyle">
+                            <Button
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                handleEditTaskBtn(item)
+                              }}
+                              data-tooltip-id="editBtn"
+                              data-tooltip-content="Editar Tarefa"
+                              className="group/btn md:md:p-3 md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border md:border-blue-500/30 md:hover:border-blue-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            >
+                              <FaPen className="size-4 text-blue-400 md:text-blue-400 group-hover/btn:text-blue-400 md:group-hover/btn:text-blue-300 transition-colors duration-300" />
+                            </Button>
+                            <Tooltip id="editBtn" className="tooltip" classNameArrow="arrowBlue" />
+                          </div>
+                        )}
+
+                        <div className="tooltipstyle">
                           <Button
                             onClick={(event) => {
                               event.stopPropagation()
-                              handleEditTaskBtn(item)
+                              handleCompletedBtn(item.id, item.completed)
                             }}
-                            className="group/btn md:md:p-3 md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border md:border-blue-500/30 md:hover:border-blue-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            className={`group/btn md:p-3 md:border rounded-xl transition-all duration-300 hover:scale-110 ${
+                              item.completed
+                                ? 'md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border-blue-500/30 md:hover:border-blue-500/50'
+                                : 'md:bg-green-500/20 md:hover:bg-green-500/30 md:border-green-500/30 md:hover:border-green-500/50'
+                            }`}
+                            data-tooltip-id={`${item.completed ? 'undoBtn' : 'checkBtn'}`}
+                            data-tooltip-content={`${
+                              item.completed ? 'Desmarcar concluída' : 'Concluir tarefa'
+                            }`}
                           >
-                            <FaPen className="size-4 text-blue-400 md:text-blue-400 group-hover/btn:text-blue-400 md:group-hover/btn:text-blue-300 transition-colors duration-300" />
+                            {item.completed ? (
+                              <FaUndo className="size-4 text-blue-400 md:text-blue-400 group-hover/btn:text-blue-400 md:group-hover/btn:text-blue-3000 transition-colors duration-300" />
+                            ) : (
+                              <FaCheck className="size-4 text-green-300 md:text-green-400 group-hover/btn:text-green-300 transition-colors duration-300" />
+                            )}
                           </Button>
-                        )}
-
-                        <Button
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            handleCompletedBtn(item.id, item.completed)
-                          }}
-                          className={`group/btn md:p-3 md:border rounded-xl transition-all duration-300 hover:scale-110 ${
-                            item.completed
-                              ? 'md:bg-blue-500/20 md:hover:bg-blue-500/30 md:border-blue-500/30 md:hover:border-blue-500/50'
-                              : 'md:bg-green-500/20 md:hover:bg-green-500/30 md:border-green-500/30 md:hover:border-green-500/50'
-                          }`}
-                        >
-                          {item.completed ? (
-                            <FaUndo className="size-4 text-blue-400 md:text-blue-400 group-hover/btn:text-blue-400 md:group-hover/btn:text-blue-3000 transition-colors duration-300" />
-                          ) : (
-                            <FaCheck className="size-4 text-green-300 md:text-green-400 group-hover/btn:text-green-300 transition-colors duration-300" />
-                          )}
-                        </Button>
+                          <Tooltip
+                            id={`${item.completed ? 'undoBtn' : 'checkBtn'}`}
+                            className="tooltip"
+                            classNameArrow={`${item.completed ? 'arrowBlue' : 'arrowEmerald'}`}
+                          />
+                        </div>
 
                         {item.completed && (
+                          <div className="tooltipstyle">
+                            <Button
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                handleArchivedBtn(item.id)
+                              }}
+                              className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                              data-tooltip-id="archiveBtn"
+                              data-tooltip-content="Arquivar tarefa"
+                            >
+                              <MdArchive className="size-4 text-amber-300 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
+                            </Button>
+                            <Tooltip
+                              id="archiveBtn"
+                              className="tooltip"
+                              classNameArrow="arrowAmber"
+                            />
+                          </div>
+                        )}
+
+                        <div className="tooltipstyle">
                           <Button
                             onClick={(event) => {
                               event.stopPropagation()
-                              handleArchivedBtn(item.id)
+                              handleRemoveTaskBtn(item.id)
                             }}
-                            className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            className="group/btn md:p-3 md:bg-red-400/20 md:hover:bg-red-400/30 md:border md:border-red-400/30 md:hover:border-red-400/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            data-tooltip-id="removeBtn"
+                            data-tooltip-content="Excluir tarefa"
                           >
-                            <MdArchive className="size-4 text-amber-300 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
+                            <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-400 md:group-hover/btn:text-red-300 transition-colors duration-300" />
                           </Button>
-                        )}
-
-                        <Button
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            handleRemoveTaskBtn(item.id)
-                          }}
-                          className="group/btn md:p-3 md:bg-red-400/20 md:hover:bg-red-400/30 md:border md:border-red-400/30 md:hover:border-red-400/50 rounded-xl transition-all duration-300 hover:scale-110"
-                        >
-                          <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-400 md:group-hover/btn:text-red-300 transition-colors duration-300" />
-                        </Button>
+                          <Tooltip id="removeBtn" className="tooltip" classNameArrow="arrowRed" />
+                        </div>
                       </div>
                     </div>
                   </div>

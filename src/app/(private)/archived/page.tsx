@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react'
 
 import Head from 'next/head'
 import { FaAngleDown, FaAngleUp, FaTasks, FaTrashAlt } from 'react-icons/fa'
-import { MdUnarchive, MdArchive } from 'react-icons/md'
+import { MdUnarchive } from 'react-icons/md'
 import { BsArchive } from 'react-icons/bs'
 
 import { db } from '@/services/firebaseConnection'
@@ -26,6 +26,7 @@ import Loading from '@/components/loading'
 import { showAlert, showConfirmationAlert } from '@/components/alert'
 import Button from '@/components/button'
 import ShowTaskModal from '@/components/showtaskmodal'
+import { Tooltip } from 'react-tooltip'
 
 interface TaskProps {
   id: string
@@ -222,26 +223,40 @@ export default function ArchivedTasks() {
                         } md:flex md:flex-row md:opacity-100`}
                       >
                         {item.completed && (
+                          <div className="tooltipstyle">
+                            <Button
+                              onClick={(event) => {
+                                event.stopPropagation()
+                                handleUnarchivedBtn(item.id)
+                              }}
+                              className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                              data-tooltip-id="unarchiveBtn"
+                              data-tooltip-content="Desarquivar tarefa"
+                            >
+                              <MdUnarchive className="size-4 text-amber-300 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
+                            </Button>
+                            <Tooltip
+                              id="unarchiveBtn"
+                              className="tooltip"
+                              classNameArrow="arrowAmber"
+                            />
+                          </div>
+                        )}
+
+                        <div className="tooltipstyle">
                           <Button
                             onClick={(event) => {
                               event.stopPropagation()
-                              handleUnarchivedBtn(item.id)
+                              handleRemoveTaskBtn(item.id)
                             }}
-                            className="group/btn md:p-3 md:bg-amber-500/20 md:hover:bg-amber-500/30 md:border md:border-amber-500/30 md:hover:border-amber-500/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            className="group/btn md:p-3 md:bg-red-400/20 md:hover:bg-red-400/30 md:border md:border-red-400/30 md:hover:border-red-400/50 rounded-xl transition-all duration-300 hover:scale-110"
+                            data-tooltip-id="removeBtn"
+                            data-tooltip-content="Excluir tarefa"
                           >
-                            <MdUnarchive className="size-4 text-amber-300 md:text-amber-400 group-hover/btn:text-amber-300 transition-colors duration-300" />
+                            <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-400 md:group-hover/btn:text-red-300 transition-colors duration-300" />
                           </Button>
-                        )}
-
-                        <Button
-                          onClick={(event) => {
-                            event.stopPropagation()
-                            handleRemoveTaskBtn(item.id)
-                          }}
-                          className="group/btn md:p-3 md:bg-red-400/20 md:hover:bg-red-400/30 md:border md:border-red-400/30 md:hover:border-red-400/50 rounded-xl transition-all duration-300 hover:scale-110"
-                        >
-                          <FaTrashAlt className="size-4 text-red-400 md:text-red-400 group-hover/btn:text-red-400 md:group-hover/btn:text-red-300 transition-colors duration-300" />
-                        </Button>
+                          <Tooltip id="removeBtn" className="tooltip" classNameArrow="arrowRed" />
+                        </div>
                       </div>
                     </div>
                   </div>
