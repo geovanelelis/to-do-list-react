@@ -226,7 +226,7 @@ function SavedTasksContent() {
 
         {/* Cards de Estatísticas */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12">
-          <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-blue-300 text-sm font-medium">Tarefas Ativas</p>
@@ -238,7 +238,7 @@ function SavedTasksContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-green-300 text-sm font-medium">Concluídas</p>
@@ -250,7 +250,7 @@ function SavedTasksContent() {
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm border border-orange-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
+          <div className="bg-gradient-to-r from-orange-500/20 to-orange-600/20 backdrop-blur-sm border border-orange-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-orange-400 text-sm font-medium">Pendentes</p>

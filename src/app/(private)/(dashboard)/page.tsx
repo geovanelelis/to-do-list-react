@@ -122,45 +122,45 @@ export default function Dashboardd() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-12">
-          <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          <div className="bg-gradient-to-r from-blue-500/20 to-blue-600/20 backdrop-blur-sm border border-blue-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
+            <div className="flex max-md:flex-row-reverse items-center justify-between">
               <div>
-                <p className="text-blue-300 text-sm font-medium">Tarefas Pendentes</p>
+                <p className="text-blue-300 text-sm font-medium">Pendentes</p>
                 <p className="text-3xl font-bold">{pendingTasks.length}</p>
               </div>
               <div className="p-3 bg-blue-500/20 rounded-xl">
-                <FaTasks className="text-2xl text-blue-400" />
+                <FaTasks className="text-base md:text-2xl text-blue-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
+          <div className="bg-gradient-to-r from-green-500/20 to-green-600/20 backdrop-blur-sm border border-green-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
+            <div className="flex max-md:flex-row-reverse items-center justify-between">
               <div>
                 <p className="text-green-300 text-sm font-medium">Concluídas</p>
                 <p className="text-3xl font-bold">{completedTasks.length}</p>
               </div>
               <div className="p-3 bg-green-500/20 rounded-xl">
-                <FaCheck className="text-2xl text-green-400" />
+                <FaCheck className="text-base md:text-2xl text-green-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
+          <div className="bg-gradient-to-r from-amber-500/20 to-amber-600/20 backdrop-blur-sm border border-amber-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
+            <div className="flex max-md:flex-row-reverse items-center justify-between">
               <div>
                 <p className="text-amber-300 text-sm font-medium">Arquivadas</p>
                 <p className="text-3xl font-bold">{archivedTasks.length}</p>
               </div>
               <div className="p-3 bg-amber-500/20 rounded-xl">
-                <MdArchive className="text-2xl text-amber-400" />
+                <MdArchive className="text-base md:text-2xl text-amber-400" />
               </div>
             </div>
           </div>
 
-          <div className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6 hover:scale-105 transition-transform duration-300">
-            <div className="flex items-center justify-between">
+          <div className="bg-gradient-to-r from-purple-500/20 to-purple-600/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-4 md:p-6 hover:scale-105 transition-transform duration-300">
+            <div className="flex max-md:flex-row-reverse items-center justify-between">
               <div>
                 <p className="text-purple-300 text-sm font-medium">Progresso</p>
                 <p className="text-3xl font-bold text-white">
@@ -171,7 +171,7 @@ export default function Dashboardd() {
                 </p>
               </div>
               <div className="p-3 bg-purple-500/20 rounded-xl">
-                <MdDashboard className="text-2xl text-purple-400" />
+                <MdDashboard className="text-base md:text-2xl text-purple-400" />
               </div>
             </div>
           </div>
