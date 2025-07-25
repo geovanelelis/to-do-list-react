@@ -6,7 +6,7 @@ import AuthProvider from '@/components/sessionprovider'
 import { ToastContainer } from 'react-toastify'
 
 export const metadata: Metadata = {
-  title: 'To Do List',
+  title: 'Tarefinhas',
 }
 
 const oxanium = Oxanium({
