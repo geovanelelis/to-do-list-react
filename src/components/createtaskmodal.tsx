@@ -55,6 +55,25 @@ export default function TaskModal({ isOpen, onClose, onSubmit, item }: TaskModal
       return
     }
 
+    const selectDate = new Date(endDate)
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+
+    const maxDate = new Date()
+    maxDate.setFullYear(maxDate.getFullYear() + 1)
+
+    if (selectDate < today) {
+      showAlert('error', 'A data não pode ser no passado.')
+      setIsLoading(false)
+      return
+    }
+
+    if (selectDate > maxDate) {
+      showAlert('error', 'Escolha uma data dentro de 1 ano')
+      setIsLoading(false)
+      return
+    }
+
     const taskData: TaskProps = {
       id: item?.id,
       user: session?.user?.email,
